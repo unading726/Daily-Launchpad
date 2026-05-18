@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daily Launchpad</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#F8F7F3;
+  --surface:#FFFFFF;
+  --surface-2:#F2F0EB;
+  --surface-hover:#EAE8E2;
+  --border:rgba(0,0,0,0.07);
+  --border-md:rgba(0,0,0,0.12);
+  --text:#18170F;
+  --text-2:#6B6757;
+  --text-3:#ABA99E;
+  --accent:#C96442;
+  --accent-dim:#F5E8E3;
+  --accent-border:#EAC4B6;
+  --green:#2A7A50;
+  --green-dim:#E8F3EC;
+  --r:14px;
+  --r-sm:9px;
+  --r-pill:100px;
+}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --bg:#161512;
+    --surface:#1E1D1A;
+    --surface-2:#272522;
+    --surface-hover:#2F2E2A;
+    --border:rgba(255,255,255,0.07);
+    --border-md:rgba(255,255,255,0.12);
+    --text:#F0EEE8;
+    --text-2:#8A8779;
+    --text-3:#4A4944;
+    --accent:#D97A5A;
+    --accent-dim:#251B17;
+    --accent-border:#3D2318;
+    --green:#4CAF7D;
+    --green-dim:#142217;
+  }
+}
+
+body{
+  font-family:'DM Sans',-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  padding:2.5rem 1rem 5rem;
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+
+.app{width:100%;max-width:480px}
+
+/* ── Header ── */
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.25rem}
+.logo{display:flex;align-items:center;gap:9px}
+.logo-mark{
+  width:30px;height:30px;
+  background:var(--accent);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+}
+.logo-mark svg{width:15px;height:15px;fill:rgba(255,255,255,0.9)}
+.logo-name{font-size:14px;font-weight:500;color:var(--text-2);letter-spacing:-0.01em}
+.date-badge{
+  font-size:12px;color:var(--text-2);
+  background:var(--surface-2);border:1px solid var(--border);
+  border-radius:var(--r-pill);padding:4px 11px;
+}
+
+/* ── Phase strip ── */
+.phase-strip{display:flex;align-items:center;gap:6px;margin-bottom:1.75rem}
+.phase-node{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--text-3);
+  transition:color 0.2s;
+}
+.phase-node.active{color:var(--accent);font-weight:500}
+.phase-node.done{color:var(--green)}
+.phase-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:var(--text-3);flex-shrink:0;transition:background 0.2s;
+}
+.phase-node.active .phase-dot{background:var(--accent)}
+.phase-node.done .phase-dot{background:var(--green)}
+.phase-sep{flex:1;height:1px;background:var(--border)}
+
+/* ── Card ── */
+.card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--r);overflow:hidden;margin-bottom:10px;
+}
+.card-pad{padding:1.5rem}
+
+/* ── Typography ── */
+.eyebrow{font-size:11px;font-weight:500;letter-spacing:0.07em;text-transform:uppercase;color:var(--text-3);margin-bottom:.875rem}
+.headline{font-size:22px;font-weight:500;letter-spacing:-0.03em;line-height:1.2;margin-bottom:8px}
+.subtext{font-size:14px;color:var(--text-2);line-height:1.6}
+
+/* ── Task input rows ── */
+.task-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:1.25rem}
+
+.task-row-wrap{
+  display:flex;align-items:stretch;
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  background:var(--surface-2);transition:all 0.15s;overflow:hidden;
+}
+.task-row-wrap:focus-within{
+  border-color:var(--accent-border);background:var(--surface);
+  box-shadow:0 0 0 3px rgba(201,100,66,0.1);
+}
+
+.task-energy-tag{
+  display:flex;align-items:center;justify-content:center;
+  width:36px;flex-shrink:0;cursor:pointer;
+  border-right:1px solid var(--border);transition:background 0.15s;
+  font-size:14px;
+  background:transparent;border-top:none;border-bottom:none;border-left:none;
+}
+.task-energy-tag:hover{background:var(--surface-hover)}
+
+.task-field{
+  flex:1;display:flex;align-items:center;gap:8px;padding:0 12px;min-height:46px;
+}
+.task-num-badge{
+  font-size:11px;font-weight:500;color:var(--text-3);
+  min-width:14px;flex-shrink:0;
+}
+.task-input{
+  flex:1;border:none;background:transparent;font-family:inherit;
+  font-size:14px;color:var(--text);outline:none;padding:11px 0;
+  width:100%;
+}
+.task-input::placeholder{color:var(--text-3)}
+.task-input:disabled{opacity:0.5;cursor:not-allowed}
+
+.energy-hint{
+  font-size:12px;color:var(--text-3);
+  display:flex;align-items:center;gap:6px;margin-bottom:1.25rem;
+}
+
+/* ── Main button ── */
+.btn-main{
+  width:100%;padding:13px;background:var(--accent);color:#fff;
+  border:none;border-radius:var(--r-sm);font-family:inherit;
+  font-size:15px;font-weight:500;cursor:pointer;
+  transition:all 0.15s;letter-spacing:-0.01em;
+}
+.btn-main:hover{filter:brightness(1.08)}
+.btn-main:active{transform:scale(0.98)}
+.btn-main:disabled{opacity:0.35;cursor:not-allowed;transform:none}
+
+.btn-sec{
+  padding:10px 16px;background:var(--surface-2);color:var(--text-2);
+  border:1px solid var(--border);border-radius:var(--r-sm);font-family:inherit;
+  font-size:14px;cursor:pointer;transition:all 0.15s;
+}
+.btn-sec:hover{background:var(--surface-hover)}
+.btn-sec:active{transform:scale(0.98)}
+
+.btn-ghost{
+  background:none;border:none;font-family:inherit;font-size:13px;
+  color:var(--text-3);cursor:pointer;padding:8px 0;
+  transition:color 0.15s;
+}
+.btn-ghost:hover{color:var(--text-2)}
+
+/* ── Suggested task highlight ── */
+.suggested-card{
+  border:1px solid var(--accent-border);border-radius:var(--r-sm);
+  padding:14px 16px;background:var(--accent-dim);
+  margin-bottom:10px;cursor:pointer;transition:all 0.15s;display:flex;
+  align-items:flex-start;gap:10px;width:100%;font-family:inherit;text-align:left;
+}
+.suggested-card:hover{filter:brightness(0.97)}
+
+.suggested-badge{
+  font-size:10px;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;
+  color:var(--accent);background:rgba(201,100,66,0.12);
+  border-radius:var(--r-pill);padding:3px 8px;
+  flex-shrink:0;margin-top:1px;
+}
+
+.suggested-text{font-size:14px;color:var(--text);line-height:1.5;font-weight:500}
+
+.other-tasks{display:flex;flex-direction:column;gap:4px;margin-bottom:1.25rem}
+
+.other-task-btn{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 14px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  font-family:inherit;text-align:left;cursor:pointer;
+  transition:all 0.15s;width:100%;color:var(--text-2);font-size:13px;
+}
+.other-task-btn:hover{background:var(--surface-hover);border-color:var(--border-md);color:var(--text)}
+.other-task-btn.selected{
+  background:var(--accent-dim);border-color:var(--accent-border);color:var(--text);
+}
+.other-task-num{color:var(--text-3);font-size:11px;margin-top:2px;flex-shrink:0}
+
+/* ── Duration slider ── */
+.dur-row{display:flex;align-items:center;gap:12px;margin-bottom:1.25rem}
+.dur-label{font-size:13px;color:var(--text-2);flex-shrink:0;width:70px}
+.dur-adj-btn{
+  width:28px;height:28px;border-radius:50%;background:var(--surface-2);
+  border:1px solid var(--border);cursor:pointer;font-size:16px;color:var(--text-2);
+  display:flex;align-items:center;justify-content:center;transition:all 0.15s;
+  flex-shrink:0;font-family:inherit;
+}
+.dur-adj-btn:hover{background:var(--surface-hover)}
+.dur-val{font-size:20px;font-weight:500;color:var(--text);min-width:36px;text-align:center;letter-spacing:-0.02em}
+.dur-unit{font-size:13px;color:var(--text-3)}
+
+/* ── Timer ── */
+.timer-wrap{padding:2rem 1.5rem 1.5rem;text-align:center}
+
+.focus-label{
+  font-size:13px;color:var(--text-2);margin-bottom:1.75rem;
+  display:flex;align-items:flex-start;justify-content:center;gap:8px;
+}
+.focus-label-task{color:var(--text);font-weight:500;font-size:14px;line-height:1.5}
+
+.ring-container{
+  position:relative;width:180px;height:180px;
+  margin:0 auto 1.75rem;
+}
+.ring-container svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--border-md);stroke-width:2.5}
+.ring-fg{
+  fill:none;stroke:var(--accent);stroke-width:2.5;stroke-linecap:round;
+  transition:stroke-dashoffset 1s linear;
+}
+.ring-overlay{
+  position:absolute;inset:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+}
+.ring-time{font-size:38px;font-weight:300;letter-spacing:-0.04em;line-height:1}
+.ring-status{font-size:12px;color:var(--text-3);margin-top:4px}
+
+.timer-actions{display:flex;align-items:center;justify-content:center;gap:10px}
+
+.play-btn{
+  width:52px;height:52px;border-radius:50%;background:var(--accent);
+  border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;
+  transition:all 0.15s;box-shadow:0 2px 8px rgba(201,100,66,0.3);
+}
+.play-btn:hover{filter:brightness(1.1);box-shadow:0 4px 16px rgba(201,100,66,0.4)}
+.play-btn:active{transform:scale(0.95)}
+.play-btn svg{width:18px;height:18px;fill:white;margin-left:2px}
+.play-btn.pause-mode svg{margin-left:0}
+
+/* ── Reflect ── */
+.reflect-q{font-size:15px;color:var(--text);margin-bottom:1rem;font-weight:500}
+.progress-btns{display:flex;gap:6px;margin-bottom:1.25rem}
+.progress-btn{
+  flex:1;padding:9px 8px;border:1px solid var(--border);border-radius:var(--r-sm);
+  background:var(--surface-2);font-family:inherit;font-size:13px;color:var(--text-2);
+  cursor:pointer;transition:all 0.15s;text-align:center;
+}
+.progress-btn:hover{background:var(--surface-hover)}
+.progress-btn.sel{background:var(--accent-dim);border-color:var(--accent-border);color:var(--accent);font-weight:500}
+
+.next-action-wrap{margin-bottom:1.25rem}
+.next-action-label{font-size:13px;color:var(--text-2);margin-bottom:6px}
+.next-action-input{
+  width:100%;padding:10px 12px;background:var(--surface-2);
+  border:1px solid var(--border);border-radius:var(--r-sm);
+  font-family:inherit;font-size:14px;color:var(--text);outline:none;
+  transition:all 0.2s;
+}
+.next-action-input::placeholder{color:var(--text-3)}
+.next-action-input:focus{border-color:var(--accent-border);background:var(--surface);box-shadow:0 0 0 3px rgba(201,100,66,0.1)}
+
+/* ── Done summary ── */
+.done-icon{
+  width:52px;height:52px;border-radius:50%;background:var(--green-dim);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;
+}
+.done-icon svg{width:24px;height:24px;stroke:var(--green);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+.session-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--border);
+  font-size:14px;
+}
+.session-row:last-child{border-bottom:none}
+.session-row-label{color:var(--text-2)}
+.session-row-val{font-weight:500}
+.session-row-val.done-val{color:var(--green)}
+
+/* ── Completed task pill in header ── */
+.done-pill{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--green-dim);border-radius:var(--r-pill);
+  padding:4px 10px;font-size:12px;color:var(--green);margin-bottom:1rem;
+}
+.done-pill svg{width:10px;height:10px;stroke:var(--green);fill:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ── Divider ── */
+.hr{height:1px;background:var(--border);margin:1.25rem 0}
+
+/* ── Animations ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-up{animation:fadeUp 0.22s ease}
+
+@keyframes pulse{0%,100%{box-shadow:0 2px 8px rgba(201,100,66,0.3)}50%{box-shadow:0 2px 20px rgba(201,100,66,0.5)}}
+.pulsing{animation:pulse 2s infinite}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+const C = 2 * Math.PI * 82;
+const STORAGE = 'launchpad_v3';
+
+const ENERGY = [
+  {key:'high', icon:'🔴', label:'深度'},
+  {key:'med',  icon:'🟡', label:'常规'},
+  {key:'low',  icon:'🟢', label:'轻松'},
+];
+
+const DEFAULT = {
+  phase:'plan',
+  tasks:[
+    {text:'', energy:'med'},
+    {text:'', energy:'med'},
+    {text:'', energy:'med'},
+  ],
+  suggested:0,
+  chosen:0,
+  duration:25,
+  timeLeft:0,
+  totalTime:0,
+  running:false,
+  paused:false,
+  completedTasks:[],
+  focusTask:'',
+  reflectProgress:'',
+  reflectNext:'',
+};
+
+let S = JSON.parse(JSON.stringify(DEFAULT));
+let _timer = null;
+
+function load(){
+  try{
+    const saved = localStorage.getItem(STORAGE);
+    if(!saved) return;
+    const {date, state} = JSON.parse(saved);
+    if(date === new Date().toDateString()){
+      Object.assign(S, state);
+      S.running = false;
+    }
+  }catch(e){}
+}
+
+function save(){
+  localStorage.setItem(STORAGE, JSON.stringify({
+    date: new Date().toDateString(),
+    state: {...S, running:false}
+  }));
+}
+
+function reset(){
+  clearInterval(_timer);
+  S = JSON.parse(JSON.stringify(DEFAULT));
+  localStorage.removeItem(STORAGE);
+  render();
+}
+
+function fmt(sec){
+  const m=Math.floor(sec/60), s=sec%60;
+  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtDate(){
+  return new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
+}
+
+function suggestTask(){
+  // Suggest the highest-energy unfocused task in the morning, lowest-energy later in the day
+  const hour = new Date().getHours();
+  const energyOrder = hour < 13 
+    ? ['high','med','low']
+    : ['low','med','high'];
+  const tasks = S.tasks.filter(t => t.text.trim() && !S.completedTasks.includes(t.text));
+  if(!tasks.length) return 0;
+  for(const e of energyOrder){
+    const idx = S.tasks.findIndex(t => t.text.trim() && !S.completedTasks.includes(t.text) && t.energy === e);
+    if(idx >= 0) return idx;
+  }
+  return S.tasks.findIndex(t => t.text.trim() && !S.completedTasks.includes(t.text));
+}
+
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;')}
+
+/* ──────────── Renderers ──────────── */
+
+function renderHeader(){
+  return `<div class="header">
+    <div class="logo">
+      <div class="logo-mark"><svg viewBox="0 0 15 15"><path d="M7.5 1C4.46 1 2 3.46 2 6.5c0 1.7.76 3.22 1.97 4.25L3 14h9l-.97-3.25C12.24 9.72 13 8.2 13 6.5 13 3.46 10.54 1 7.5 1z"/></svg></div>
+      <span class="logo-name">Daily Launchpad</span>
+    </div>
+    <span class="date-badge">${fmtDate()}</span>
+  </div>`;
+}
+
+function renderPhase(active){
+  const phases = [{id:'plan',label:'计划'},{id:'focus',label:'专注'},{id:'reflect',label:'复盘'}];
+  return `<div class="phase-strip">
+    ${phases.map((p,i)=>{
+      const cls = p.id===active?'active':
+        (phases.findIndex(x=>x.id===active) > i ? 'done':'');
+      return `${i>0?'<div class="phase-sep"></div>':''}
+        <div class="phase-node ${cls}">
+          <div class="phase-dot"></div>
+          ${p.label}
+        </div>`;
+    }).join('')}
+  </div>`;
+}
+
+function renderPlan(){
+  const validCount = S.tasks.filter(t=>t.text.trim()).length;
+  return `
+  ${renderHeader()}
+  ${renderPhase('plan')}
+  <div class="card fade-up">
+    <div class="card-pad">
+      <p class="eyebrow">今天的 top 3</p>
+      <p class="subtext" style="margin-bottom:1.25rem;font-size:13px;color:var(--text-3)">用"打开 / 搜索 / 写下 / 发送"开头，写具体的下一个动作。点击左侧圆点切换精力类型。</p>
+      <div class="task-rows" id="task-rows">
+        ${S.tasks.map((t,i)=>renderTaskRow(t,i)).join('')}
+      </div>
+      <div class="energy-hint">
+        ${ENERGY.map(e=>`<span>${e.icon} ${e.label}</span>`).join('<span style="color:var(--border-md)">·</span>')}
+        <span style="flex:1"></span>
+        <span>点击左侧图标循环切换</span>
+      </div>
+    </div>
+    <div style="padding:0 1.5rem 1.5rem;">
+      <button class="btn-main" id="btn-lock" ${validCount===0?'disabled':''}>锁定，去专注</button>
+    </div>
+  </div>
+  ${S.completedTasks.length>0?`<p style="font-size:12px;color:var(--text-3);text-align:center;margin-top:4px">今天已完成 ${S.completedTasks.length} 轮</p>`:''}`;
+}
+
+function renderTaskRow(t, i){
+  const e = ENERGY.find(x=>x.key===t.energy)||ENERGY[1];
+  return `<div class="task-row-wrap" id="row-wrap-${i}">
+    <button class="task-energy-tag" id="energy-btn-${i}" title="切换精力类型">${e.icon}</button>
+    <div class="task-field">
+      <span class="task-num-badge">${i+1}</span>
+      <input class="task-input" id="task-input-${i}" type="text"
+        placeholder="物理动作 ${i+1}…" value="${esc(t.text)}" maxlength="80">
+    </div>
+  </div>`;
+}
+
+function renderChoose(){
+  const avail = S.tasks.map((t,i)=>({...t,i})).filter(t=>t.text.trim()&&!S.completedTasks.includes(t.text));
+  const sugg = avail.find(t=>t.i===S.suggested) || avail[0];
+  const others = avail.filter(t=>t !== sugg);
+  const hour = new Date().getHours();
+  const timeHint = hour < 13 ? '早上精力最好，建议先做深度任务' : hour < 17 ? '下午适合常规执行类任务' : '傍晚精力下降，轻松任务为主';
+
+  return `
+  ${renderHeader()}
+  ${renderPhase('focus')}
+  <div class="card fade-up">
+    <div class="card-pad">
+      <p class="eyebrow">建议从这个开始</p>
+      <p style="font-size:12px;color:var(--text-3);margin-bottom:1rem">${timeHint}</p>
+      
+      ${sugg?`<button class="suggested-card" id="confirm-sugg">
+        <span class="suggested-badge">推荐</span>
+        <span class="suggested-text">${esc(sugg.text)}</span>
+      </button>`:''}
+
+      ${others.length>0?`
+      <p style="font-size:12px;color:var(--text-3);margin-bottom:8px">或者选另一个：</p>
+      <div class="other-tasks">
+        ${others.map(t=>`
+        <button class="other-task-btn ${S.chosen===t.i&&S.chosen!==S.suggested?'selected':''}" id="other-${t.i}">
+          <span class="other-task-num">${t.i+1}</span>
+          <span>${esc(t.text)}</span>
+        </button>`).join('')}
+      </div>`:''}
+
+      <div class="hr"></div>
+      <p class="eyebrow">投入时长</p>
+      <div class="dur-row">
+        <button class="dur-adj-btn" id="dur-minus">−</button>
+        <span class="dur-val" id="dur-val">${S.duration}</span>
+        <span class="dur-unit">分钟</span>
+        <button class="dur-adj-btn" id="dur-plus">+</button>
+        <span class="dur-label" style="font-size:12px;color:var(--text-3)">${S.duration<=20?'热身模式':S.duration<=30?'标准番茄':'深度工作'}</span>
+      </div>
+    </div>
+    <div style="padding:0 1.5rem 1.5rem;display:flex;gap:8px">
+      <button class="btn-sec" id="btn-back">← 返回</button>
+      <button class="btn-main" id="btn-go" style="flex:1">开始专注</button>
+    </div>
+  </div>`;
+}
+
+function renderFocus(){
+  const prog = S.timeLeft / S.totalTime;
+  const off = C * (1 - prog);
+  return `
+  ${renderHeader()}
+  ${renderPhase('focus')}
+  <div class="card fade-up">
+    <div class="timer-wrap">
+      <div class="focus-label">
+        <div class="focus-label-task">${esc(S.focusTask)}</div>
+      </div>
+
+      <div class="ring-container">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="82"/>
+          <circle class="ring-fg" id="ring-fg" cx="90" cy="90" r="82"
+            stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
+        </svg>
+        <div class="ring-overlay">
+          <div class="ring-time" id="ring-time">${fmt(S.timeLeft)}</div>
+          <div class="ring-status">${S.paused?'已暂停':S.running?'专注中':'准备好了'}</div>
+        </div>
+      </div>
+
+      <div class="timer-actions">
+        <button class="btn-ghost" id="btn-abandon" style="position:absolute;left:1.5rem">结束</button>
+        <button class="play-btn ${!S.running&&!S.paused?'pulsing':''} ${S.running?'pause-mode':''}" id="btn-play">
+          ${S.running
+            ?`<svg viewBox="0 0 18 18"><rect x="2" y="2" width="5" height="14" rx="1.5"/><rect x="11" y="2" width="5" height="14" rx="1.5"/></svg>`
+            :`<svg viewBox="0 0 18 18"><polygon points="3,1 17,9 3,17"/></svg>`}
+        </button>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:12px;color:var(--text-3);text-align:center;margin-top:8px">只对这段时间负责，不对结果负责。</p>`;
+}
+
+function renderReflect(){
+  const progOpts = ['完成了','推进了','没怎么动'];
+  return `
+  ${renderHeader()}
+  ${renderPhase('reflect')}
+  <div class="card fade-up">
+    <div class="card-pad">
+      <p class="eyebrow">这一轮结束了</p>
+      <div class="done-pill">
+        <svg viewBox="0 0 10 10"><polyline points="1,5 4,8 9,2"/></svg>
+        ${esc(S.focusTask)}
+      </div>
+
+      <p class="reflect-q">这个任务……</p>
+      <div class="progress-btns">
+        ${progOpts.map(o=>`
+        <button class="progress-btn ${S.reflectProgress===o?'sel':''}" id="prog-${o}">${o}</button>`).join('')}
+      </div>
+
+      <div class="next-action-wrap">
+        <p class="next-action-label">下一个具体动作是什么？（可选）</p>
+        <input class="next-action-input" id="next-action-input" type="text"
+          placeholder="打开 / 搜索 / 写下…" value="${esc(S.reflectNext)}" maxlength="80">
+      </div>
+    </div>
+    <div style="padding:0 1.5rem 1.5rem;display:flex;gap:8px">
+      ${hasMore()?`<button class="btn-main" id="btn-next-task" style="flex:1">继续下一个</button>`:''}
+      <button class="btn-${hasMore()?'sec':'main'}" id="btn-done-day" ${!hasMore()?'style="flex:1"':''}>
+        ${hasMore()?'今天先停了':'完成今天 🎉'}
+      </button>
+    </div>
+  </div>`;
+}
+
+function renderSummary(){
+  return `
+  ${renderHeader()}
+  <div class="card fade-up">
+    <div class="card-pad" style="text-align:center;padding:2.5rem 1.5rem">
+      <div class="done-icon"><svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,7"/></svg></div>
+      <h2 class="headline" style="margin-bottom:6px">今天干完了</h2>
+      <p class="subtext" style="margin-bottom:2rem">交付了时间，打破了启动障碍。</p>
+
+      <div style="text-align:left;margin-bottom:1.5rem">
+        ${S.completedTasks.map(t=>`
+        <div class="session-row">
+          <span class="session-row-label">${esc(t)}</span>
+          <span class="session-row-val done-val">✓</span>
+        </div>`).join('')}
+      </div>
+
+      <button class="btn-sec" id="btn-reset" style="width:100%">重置，明天见</button>
+    </div>
+  </div>`;
+}
+
+function hasMore(){
+  return S.tasks.some(t=>t.text.trim()&&!S.completedTasks.includes(t.text));
+}
+
+/* ──────────── Main render ──────────── */
+function render(){
+  const app = document.getElementById('app');
+  app.style.position = 'relative';
+  if(S.phase==='plan')        app.innerHTML = renderPlan();
+  else if(S.phase==='choose') app.innerHTML = renderChoose();
+  else if(S.phase==='focus')  app.innerHTML = renderFocus();
+  else if(S.phase==='reflect') app.innerHTML = renderReflect();
+  else if(S.phase==='summary') app.innerHTML = renderSummary();
+  bind();
+}
+
+function startTimer(){
+  clearInterval(_timer);
+  S.running = true; S.paused = false;
+  _timer = setInterval(()=>{
+    if(S.timeLeft <= 0){
+      clearInterval(_timer);
+      S.running = false;
+      S.phase = 'reflect';
+      save(); render(); return;
+    }
+    S.timeLeft--;
+    const rt = document.getElementById('ring-time');
+    const rf = document.getElementById('ring-fg');
+    if(rt) rt.textContent = fmt(S.timeLeft);
+    if(rf) rf.style.strokeDashoffset = C*(1-S.timeLeft/S.totalTime);
+    if(S.timeLeft%30===0) save();
+  },1000);
+  render();
+}
+
+function pauseTimer(){
+  clearInterval(_timer);
+  S.running = false; S.paused = true;
+  render();
+}
+
+/* ──────────── Event binding ──────────── */
+function bind(){
+  // Plan
+  S.tasks.forEach((_,i)=>{
+    const inp = document.getElementById(`task-input-${i}`);
+    if(inp) inp.addEventListener('input', e=>{
+      S.tasks[i].text = e.target.value;
+      const btn = document.getElementById('btn-lock');
+      if(btn) btn.disabled = !S.tasks.some(t=>t.text.trim());
+    });
+
+    const ebtn = document.getElementById(`energy-btn-${i}`);
+    if(ebtn) ebtn.addEventListener('click', ()=>{
+      const idx = ENERGY.findIndex(e=>e.key===S.tasks[i].energy);
+      S.tasks[i].energy = ENERGY[(idx+1)%ENERGY.length].key;
+      ebtn.textContent = ENERGY[(idx+1)%ENERGY.length].icon;
+    });
+  });
+
+  const btnLock = document.getElementById('btn-lock');
+  if(btnLock) btnLock.addEventListener('click', ()=>{
+    S.tasks = S.tasks.map(t=>({...t,text:t.text.trim()}));
+    S.suggested = suggestTask();
+    S.chosen = S.suggested;
+    S.phase = 'choose';
+    save(); render();
+  });
+
+  // Choose
+  const confirmSugg = document.getElementById('confirm-sugg');
+  if(confirmSugg) confirmSugg.addEventListener('click', ()=>{
+    S.chosen = S.suggested;
+    launchFocus(S.tasks[S.suggested].text);
+  });
+
+  S.tasks.forEach((_,i)=>{
+    const ob = document.getElementById(`other-${i}`);
+    if(ob) ob.addEventListener('click', ()=>{
+      S.chosen = i;
+      launchFocus(S.tasks[i].text);
+    });
+  });
+
+  const durMinus = document.getElementById('dur-minus');
+  const durPlus = document.getElementById('dur-plus');
+  if(durMinus) durMinus.addEventListener('click', ()=>{
+    S.duration = Math.max(5, S.duration-5);
+    render();
+  });
+  if(durPlus) durPlus.addEventListener('click', ()=>{
+    S.duration = Math.min(90, S.duration+5);
+    render();
+  });
+
+  const btnBack = document.getElementById('btn-back');
+  if(btnBack) btnBack.addEventListener('click', ()=>{S.phase='plan'; render();});
+
+  const btnGo = document.getElementById('btn-go');
+  if(btnGo) btnGo.addEventListener('click', ()=>{
+    launchFocus(S.tasks[S.chosen]?.text || '');
+  });
+
+  // Focus
+  const btnPlay = document.getElementById('btn-play');
+  if(btnPlay) btnPlay.addEventListener('click', ()=>{
+    S.running ? pauseTimer() : startTimer();
+  });
+
+  const btnAbandon = document.getElementById('btn-abandon');
+  if(btnAbandon) btnAbandon.addEventListener('click', ()=>{
+    clearInterval(_timer);
+    S.running = false;
+    S.completedTasks.push(S.focusTask);
+    S.phase = 'reflect';
+    save(); render();
+  });
+
+  // Reflect
+  ['完成了','推进了','没怎么动'].forEach(o=>{
+    const b = document.getElementById(`prog-${o}`);
+    if(b) b.addEventListener('click', ()=>{
+      S.reflectProgress = o;
+      document.querySelectorAll('.progress-btn').forEach(el=>el.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+  });
+
+  const nextInp = document.getElementById('next-action-input');
+  if(nextInp) nextInp.addEventListener('input', e=>S.reflectNext=e.target.value);
+
+  const btnNextTask = document.getElementById('btn-next-task');
+  if(btnNextTask) btnNextTask.addEventListener('click', ()=>{
+    // If they wrote a next action, inject it into tasks
+    if(S.reflectNext.trim()){
+      const empty = S.tasks.findIndex(t=>!t.text.trim());
+      if(empty>=0){
+        S.tasks[empty] = {text: S.reflectNext.trim(), energy:'med'};
+      }
+    }
+    S.reflectProgress = '';
+    S.reflectNext = '';
+    S.suggested = suggestTask();
+    S.chosen = S.suggested;
+    S.phase = 'choose';
+    save(); render();
+  });
+
+  const btnDoneDay = document.getElementById('btn-done-day');
+  if(btnDoneDay) btnDoneDay.addEventListener('click', ()=>{
+    S.phase = 'summary';
+    save(); render();
+  });
+
+  const btnReset = document.getElementById('btn-reset');
+  if(btnReset) btnReset.addEventListener('click', reset);
+}
+
+function launchFocus(taskText){
+  S.focusTask = taskText;
+  S.timeLeft = S.duration * 60;
+  S.totalTime = S.duration * 60;
+  S.running = false;
+  S.paused = false;
+  S.phase = 'focus';
+  save(); render();
+}
+
+// Init
+load();
+render();
+if(S.phase==='focus'&&S.timeLeft>0){S.paused=true;render();}
+</script>
+</body>
+</html>
