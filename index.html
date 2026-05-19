@@ -4,1239 +4,1145 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Daily Launchpad</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
+/* ── Default: Follow System ── */
 :root{
-  --bg:#F7F6F2;
-  --surf:#FFFFFF;
-  --surf2:#F0EEE9;
-  --surf3:#E8E6DF;
-  --hover:#ECEAE4;
-  --bd:rgba(0,0,0,.07);
-  --bd2:rgba(0,0,0,.13);
-  --tx:#17160E;
-  --tx2:#6A6858;
-  --tx3:#AEAC9F;
-  --ac:#C96442;
-  --ac-dim:#F5E8E3;
-  --ac-bd:#E8C4B2;
-  --ac-hover:#B85A39;
-  --green:#2B7A50;
-  --green-dim:#E7F3EC;
-  --amber:#8B6008;
-  --amber-dim:#FDF0D9;
-  --r:13px;
-  --rs:8px;
-  --rp:100px;
-  --shadow:0 1px 3px rgba(0,0,0,.06),0 1px 2px rgba(0,0,0,.04);
-  --shadow-md:0 4px 16px rgba(0,0,0,.09),0 2px 4px rgba(0,0,0,.05);
+  --bg:#F6F4EF;--surf:#FFF;--surf2:#F0EDE6;--surf3:#E6E3DA;--hover:#EAE7DF;
+  --bd:rgba(0,0,0,.07);--bd2:rgba(0,0,0,.12);
+  --tx:#18160D;--tx2:#68634F;--tx3:#ABA89B;
+  --ac:#C96442;--ac-dim:#F5E8E2;--ac-bd:#E5BCA8;--ac-hover:#B35839;
+  --ac-shadow:rgba(201,100,66,.28);
+  --green:#277A4A;--green-dim:#E5F2EA;
+  --amber:#8A5E05;--amber-dim:#FDF0D5;
+  --red:#C03B2B;--red-dim:#FAEAE8;
+  --r:14px;--rs:9px;--rp:100px;
 }
-
 @media(prefers-color-scheme:dark){:root{
-  --bg:#141310;--surf:#1C1B18;--surf2:#242320;--surf3:#2C2A27;--hover:#2E2C29;
+  --bg:#131109;--surf:#1B1A15;--surf2:#22211B;--surf3:#2A2920;--hover:#2E2C24;
   --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);
-  --tx:#F0EDE5;--tx2:#8A876F;--tx3:#4C4A42;
-  --ac:#D97358;--ac-dim:#251B17;--ac-bd:#3D2318;--ac-hover:#E8845F;
-  --green:#4CC07B;--green-dim:#142217;--amber:#E8B040;--amber-dim:#221A08;
+  --tx:#EDE9DE;--tx2:#87846C;--tx3:#4A4840;
+  --ac:#D97358;--ac-dim:#231913;--ac-bd:#3E2317;--ac-hover:#E8845E;
+  --ac-shadow:rgba(217,115,88,.3);
+  --green:#4ABF78;--green-dim:#112119;
+  --amber:#E8B040;--amber-dim:#1F1707;
+  --red:#E85A4F;--red-dim:#261009;
 }}
 
-body{font-family:'DM Sans',-apple-system,sans-serif;background:var(--bg);color:var(--tx);
+body{
+  font-family:'DM Sans',-apple-system,sans-serif;
+  background:var(--bg);color:var(--tx);
   min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
-  padding:2.25rem 1rem 5rem;font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-
+  padding:2rem 1rem 6rem;font-size:15px;line-height:1.6;
+  -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;
+}
 .app{width:100%;max-width:480px;position:relative}
 
-/* ── Overlay backdrop ── */
-.overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;
+/* ── Overlay ── */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
   display:flex;align-items:flex-end;justify-content:center;
-  animation:fadeOverlay .15s ease;backdrop-filter:blur(2px)}
-@keyframes fadeOverlay{from{opacity:0}to{opacity:1}}
+  animation:fadeOv .15s ease;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
+@keyframes fadeOv{from{opacity:0}to{opacity:1}}
 .overlay-panel{background:var(--surf);border-radius:var(--r) var(--r) 0 0;
   width:100%;max-width:480px;padding:1.5rem;
-  animation:slideUp .2s cubic-bezier(.32,.72,0,1);max-height:85vh;overflow-y:auto}
-@keyframes slideUp{from{transform:translateY(40px);opacity:0}to{transform:translateY(0);opacity:1}}
+  animation:slideUp .22s cubic-bezier(.32,.72,0,1);max-height:90vh;overflow-y:auto}
+@keyframes slideUp{from{transform:translateY(48px);opacity:0}to{transform:translateY(0);opacity:1}}
 
 /* ── Header ── */
-.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.75rem}
 .header-left{display:flex;align-items:center;gap:9px}
-.logo-mark{width:29px;height:29px;background:var(--ac);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.logo-mark svg{width:14px;height:14px;fill:rgba(255,255,255,.92)}
+.logo-mark{
+  width:30px;height:30px;background:var(--ac);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  box-shadow:0 2px 8px var(--ac-shadow);transition:background .3s,box-shadow .3s;
+}
+.logo-mark svg{width:14px;height:14px;fill:rgba(255,255,255,.95)}
 .logo-name{font-size:14px;font-weight:500;color:var(--tx2);letter-spacing:-.01em}
-.header-right{display:flex;align-items:center;gap:6px}
-.header-btn{width:32px;height:32px;border-radius:var(--rs);background:var(--surf2);
+.header-right{display:flex;align-items:center;gap:5px}
+.hbtn{width:33px;height:33px;border-radius:var(--rs);background:var(--surf2);
   border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all .15s;color:var(--tx2)}
-.header-btn:hover{background:var(--hover);color:var(--tx)}
-.header-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.streak-badge{display:flex;align-items:center;gap:4px;padding:4px 9px;
-  background:var(--amber-dim);border:1px solid rgba(139,96,8,.15);
-  border-radius:var(--rp);font-size:12px;font-weight:500;color:var(--amber)}
-@media(prefers-color-scheme:dark){.streak-badge{border-color:rgba(232,176,64,.15)}}
-.date-badge{font-size:12px;color:var(--tx2);background:var(--surf2);
-  border:1px solid var(--bd);border-radius:var(--rp);padding:4px 10px}
+.hbtn:hover{background:var(--hover);color:var(--tx)}
+.hbtn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.streak-badge{display:flex;align-items:center;gap:4px;padding:4px 10px;
+  background:var(--amber-dim);border:1px solid color-mix(in srgb,var(--amber) 20%,transparent);
+  border-radius:var(--rp);font-size:12px;font-weight:600;color:var(--amber)}
+.date-badge{font-size:12px;color:var(--tx3)}
 
 /* ── Phase strip ── */
 .phase-strip{display:flex;align-items:center;gap:6px;margin-bottom:1.75rem}
-.ph-node{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tx3);transition:color .2s}
+.ph-node{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--tx3);transition:color .25s}
 .ph-node.active{color:var(--ac);font-weight:500}
 .ph-node.done{color:var(--green)}
 .ph-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
 .ph-line{flex:1;height:1px;background:var(--bd)}
 
+/* ── Greeting ── */
+.greeting-card{
+  background:linear-gradient(135deg,var(--ac-dim) 0%,var(--surf) 60%);
+  border:1px solid var(--ac-bd);border-radius:var(--r);
+  padding:1.125rem 1.375rem;margin-bottom:10px;
+  display:flex;align-items:flex-start;gap:12px;transition:background .3s,border-color .3s;
+}
+.greeting-icon{font-size:22px;flex-shrink:0;line-height:1.3}
+.greeting-title{font-size:16px;font-weight:600;letter-spacing:-.02em;color:var(--tx);margin-bottom:2px}
+.greeting-sub{font-size:13px;color:var(--tx2);line-height:1.5}
+.greeting-sub strong{color:var(--ac);font-weight:500}
+
 /* ── Cards ── */
 .card{background:var(--surf);border:1px solid var(--bd);border-radius:var(--r);
-  box-shadow:var(--shadow);margin-bottom:10px;overflow:hidden}
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 2px 8px rgba(0,0,0,.06);
+  margin-bottom:10px;overflow:hidden;transition:background .3s,border-color .3s}
 .card-pad{padding:1.5rem}
 .card-foot{padding:0 1.5rem 1.5rem;display:flex;gap:8px}
-
-/* ── Typography ── */
-.eyebrow{font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;
-  color:var(--tx3);margin-bottom:.875rem}
+.eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--tx3);margin-bottom:.875rem}
 .subtext{font-size:13px;color:var(--tx3);line-height:1.6;margin-bottom:1.25rem}
+.hr{height:1px;background:var(--bd);margin:1.25rem 0}
 
 /* ── Rollover banner ── */
 .rollover-banner{display:flex;align-items:flex-start;gap:10px;
-  background:var(--amber-dim);border:1px solid rgba(139,96,8,.18);
-  border-radius:var(--r);padding:12px 14px;margin-bottom:10px}
-@media(prefers-color-scheme:dark){.rollover-banner{border-color:rgba(232,176,64,.18)}}
-.rollover-icon{font-size:16px;flex-shrink:0;margin-top:1px}
-.rollover-text{flex:1;font-size:13px;color:var(--tx2);line-height:1.5}
-.rollover-text strong{color:var(--tx);font-weight:500}
-.rollover-actions{display:flex;gap:6px;margin-top:8px}
-.rollover-btn{padding:5px 10px;border-radius:var(--rs);font-family:inherit;
-  font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid}
-.rollover-btn.primary{background:var(--amber);border-color:var(--amber);color:#fff}
-.rollover-btn.primary:hover{filter:brightness(1.1)}
-.rollover-btn.ghost{background:transparent;border-color:var(--bd2);color:var(--tx2)}
-.rollover-btn.ghost:hover{background:var(--hover)}
+  background:var(--amber-dim);border:1px solid color-mix(in srgb,var(--amber) 22%,transparent);
+  border-radius:var(--r);padding:12px 14px;margin-bottom:10px;animation:fadeUp .2s ease}
+.rbtn{padding:5px 10px;border-radius:var(--rs);font-family:inherit;font-size:12px;font-weight:500;cursor:pointer;transition:all .15s;border:1px solid}
+.rbtn.primary{background:var(--amber);border-color:var(--amber);color:#fff}
+.rbtn.primary:hover{filter:brightness(1.08)}
+.rbtn.ghost{background:transparent;border-color:var(--bd2);color:var(--tx2)}
+.rbtn.ghost:hover{background:var(--hover)}
 
-/* ── Task count stepper ── */
-.task-count-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem}
+/* ── Task count ── */
+.task-count-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.125rem}
 .task-count-label{font-size:13px;color:var(--tx2)}
 .task-count-ctrl{display:flex;align-items:center;gap:8px}
-.count-btn{width:26px;height:26px;border-radius:50%;background:var(--surf2);
-  border:1px solid var(--bd);cursor:pointer;font-size:15px;color:var(--tx2);
-  display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.count-btn{width:26px;height:26px;border-radius:50%;background:var(--surf2);border:1px solid var(--bd);
+  cursor:pointer;font-size:16px;color:var(--tx2);display:flex;align-items:center;justify-content:center;transition:all .15s}
 .count-btn:hover{background:var(--hover)}
-.count-btn:disabled{opacity:.35;cursor:not-allowed}
-.count-val{font-size:15px;font-weight:500;color:var(--tx);min-width:18px;text-align:center}
+.count-btn:disabled{opacity:.3;cursor:not-allowed}
+.count-val{font-size:15px;font-weight:600;color:var(--tx);min-width:18px;text-align:center}
 
 /* ── Task rows ── */
 .task-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:1rem}
-.task-row-wrap{display:flex;align-items:stretch;border:1px solid var(--bd);
-  border-radius:var(--rs);background:var(--surf2);transition:all .15s;overflow:hidden}
-.task-row-wrap:focus-within{border-color:var(--ac-bd);background:var(--surf);
-  box-shadow:0 0 0 3px rgba(201,100,66,.1)}
-.task-row-wrap.done-row{opacity:.5}
+.task-row-wrap{display:flex;align-items:stretch;border:1px solid var(--bd);border-radius:var(--rs);
+  background:var(--surf2);transition:all .2s;overflow:hidden}
+.task-row-wrap:focus-within{border-color:var(--ac-bd);background:var(--surf);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 15%,transparent)}
 .energy-btn{width:36px;flex-shrink:0;border:none;background:transparent;
-  border-right:1px solid var(--bd);cursor:pointer;font-size:13px;
-  transition:background .15s;display:flex;align-items:center;justify-content:center}
+  border-right:1px solid var(--bd);cursor:pointer;font-size:14px;transition:background .15s;
+  display:flex;align-items:center;justify-content:center}
 .energy-btn:hover{background:var(--hover)}
-.task-field{flex:1;display:flex;align-items:center;gap:8px;padding:0 10px;min-height:45px}
+.task-field{flex:1;display:flex;align-items:center;gap:8px;padding:0 10px;min-height:46px}
 .task-num{font-size:11px;font-weight:500;color:var(--tx3);flex-shrink:0;min-width:14px}
-.task-inp{flex:1;border:none;background:transparent;font-family:inherit;
-  font-size:14px;color:var(--tx);outline:none;padding:10px 0;width:100%}
+.task-inp{flex:1;border:none;background:transparent;font-family:inherit;font-size:14px;color:var(--tx);outline:none;padding:10px 0;width:100%}
 .task-inp::placeholder{color:var(--tx3)}
-.task-inp:disabled{cursor:not-allowed}
-.del-btn{width:28px;height:28px;flex-shrink:0;border:none;background:transparent;
-  cursor:pointer;color:var(--tx3);display:flex;align-items:center;justify-content:center;
-  border-radius:5px;transition:all .15s;margin-right:4px}
-.del-btn:hover{background:rgba(201,100,66,.1);color:var(--ac)}
-.del-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
+.task-inp:disabled{opacity:.5;cursor:not-allowed}
+.del-btn{width:30px;height:30px;flex-shrink:0;border:none;background:transparent;cursor:pointer;
+  color:var(--tx3);display:flex;align-items:center;justify-content:center;border-radius:5px;transition:all .15s;margin-right:4px}
+.del-btn:hover{background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac)}
+.del-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 
 /* ── Buttons ── */
-.btn-main{width:100%;padding:12px;background:var(--ac);color:#fff;border:none;
-  border-radius:var(--rs);font-family:inherit;font-size:15px;font-weight:500;
-  cursor:pointer;transition:all .15s;letter-spacing:-.01em}
-.btn-main:hover:not(:disabled){background:var(--ac-hover)}
+.btn-main{width:100%;padding:12px 16px;background:var(--ac);color:#fff;border:none;
+  border-radius:var(--rs);font-family:inherit;font-size:15px;font-weight:500;cursor:pointer;
+  transition:all .2s;letter-spacing:-.01em;box-shadow:0 1px 4px var(--ac-shadow)}
+.btn-main:hover:not(:disabled){background:var(--ac-hover);box-shadow:0 2px 12px var(--ac-shadow)}
 .btn-main:active:not(:disabled){transform:scale(.98)}
-.btn-main:disabled{opacity:.35;cursor:not-allowed}
-.btn-sec{padding:11px 16px;background:var(--surf2);color:var(--tx2);
-  border:1px solid var(--bd);border-radius:var(--rs);font-family:inherit;
-  font-size:14px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.btn-main:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn-sec{padding:11px 16px;background:var(--surf2);color:var(--tx2);border:1px solid var(--bd);
+  border-radius:var(--rs);font-family:inherit;font-size:14px;cursor:pointer;transition:all .15s;white-space:nowrap}
 .btn-sec:hover{background:var(--hover);color:var(--tx)}
-.btn-sec:active{transform:scale(.98)}
-.btn-ghost{background:none;border:none;font-family:inherit;font-size:13px;
-  color:var(--tx3);cursor:pointer;padding:8px 10px;transition:color .15s;border-radius:var(--rs)}
+.btn-ghost{background:none;border:none;font-family:inherit;font-size:13px;color:var(--tx3);
+  cursor:pointer;padding:8px 10px;transition:all .15s;border-radius:var(--rs)}
 .btn-ghost:hover{color:var(--tx2);background:var(--hover)}
 
-/* ── Suggested card ── */
-.sugg-card{display:flex;align-items:flex-start;gap:10px;
-  border:1px solid var(--ac-bd);border-radius:var(--rs);padding:13px 15px;
-  background:var(--ac-dim);margin-bottom:8px;cursor:pointer;transition:all .15s;
-  width:100%;font-family:inherit;text-align:left}
-.sugg-card:hover{filter:brightness(.97)}
+/* ── Choose phase ── */
+.sugg-card{display:flex;align-items:flex-start;gap:10px;border:1.5px solid var(--ac-bd);
+  border-radius:var(--rs);padding:14px 16px;background:var(--ac-dim);margin-bottom:8px;
+  cursor:pointer;transition:all .15s;width:100%;font-family:inherit;text-align:left}
+.sugg-card:hover{border-color:var(--ac);box-shadow:0 2px 12px var(--ac-shadow)}
 .sugg-badge{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
-  color:var(--ac);background:rgba(201,100,66,.12);border-radius:var(--rp);
-  padding:2px 7px;flex-shrink:0;margin-top:2px}
+  color:var(--ac);background:color-mix(in srgb,var(--ac) 14%,transparent);border-radius:var(--rp);
+  padding:2px 7px;flex-shrink:0;margin-top:3px}
 .sugg-text{font-size:14px;color:var(--tx);line-height:1.5;font-weight:500}
-
-/* ── Other task buttons ── */
 .other-tasks{display:flex;flex-direction:column;gap:4px;margin-bottom:1.25rem}
-.other-btn{display:flex;align-items:flex-start;gap:10px;padding:10px 13px;
-  background:var(--surf2);border:1px solid var(--bd);border-radius:var(--rs);
-  font-family:inherit;text-align:left;cursor:pointer;transition:all .15s;
-  width:100%;color:var(--tx2);font-size:13px}
+.other-btn{display:flex;align-items:flex-start;gap:10px;padding:10px 14px;background:var(--surf2);
+  border:1px solid var(--bd);border-radius:var(--rs);font-family:inherit;text-align:left;
+  cursor:pointer;transition:all .15s;width:100%;color:var(--tx2);font-size:13px}
 .other-btn:hover{background:var(--hover);border-color:var(--bd2);color:var(--tx)}
-.other-btn.sel{background:var(--ac-dim);border-color:var(--ac-bd);color:var(--tx)}
 .other-btn-num{color:var(--tx3);font-size:11px;margin-top:2px;flex-shrink:0}
-.skip-tag{font-size:10px;color:var(--tx3);background:var(--surf3);
-  border-radius:var(--rp);padding:1px 6px;margin-left:auto;flex-shrink:0}
+.skip-tag{font-size:10px;color:var(--tx3);background:var(--surf3);border-radius:var(--rp);
+  padding:2px 7px;margin-left:auto;flex-shrink:0;transition:all .15s}
+.skip-tag:hover{background:var(--ac-dim);color:var(--ac)}
 
-/* ── Duration control ── */
+/* ── Duration ── */
 .dur-row{display:flex;align-items:center;gap:10px;margin-bottom:1.25rem}
-.dur-adj{width:28px;height:28px;border-radius:50%;background:var(--surf2);
-  border:1px solid var(--bd);cursor:pointer;font-size:16px;color:var(--tx2);
-  display:flex;align-items:center;justify-content:center;transition:all .15s;line-height:1}
+.dur-adj{width:28px;height:28px;border-radius:50%;background:var(--surf2);border:1px solid var(--bd);
+  cursor:pointer;font-size:17px;color:var(--tx2);display:flex;align-items:center;justify-content:center;transition:all .15s}
 .dur-adj:hover{background:var(--hover)}
 .dur-val{font-size:20px;font-weight:500;letter-spacing:-.02em;min-width:32px;text-align:center}
 .dur-unit{font-size:13px;color:var(--tx3)}
-.dur-mode{font-size:12px;color:var(--tx3);margin-left:2px}
-
-/* ── Focus / Timer ── */
-.timer-wrap{padding:2rem 1.5rem 1.75rem;text-align:center}
-.focus-task-line{font-size:13px;color:var(--tx2);margin-bottom:1.75rem;
-  display:flex;align-items:flex-start;justify-content:center;gap:0}
-.focus-task-text{color:var(--tx);font-weight:500;font-size:14px;line-height:1.5}
-
-.ring-wrap{position:relative;width:176px;height:176px;margin:0 auto 1.75rem}
-.ring-wrap svg{transform:rotate(-90deg)}
-.ring-bg{fill:none;stroke:var(--bd2);stroke-width:2.5}
-.ring-fg{fill:none;stroke:var(--ac);stroke-width:2.5;stroke-linecap:round;
-  transition:stroke-dashoffset 1s linear}
-.ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center}
-.ring-time{font-size:36px;font-weight:300;letter-spacing:-.04em;line-height:1}
-.ring-status{font-size:11px;color:var(--tx3);margin-top:4px}
-
-.timer-actions{display:flex;align-items:center;justify-content:center;
-  gap:12px;position:relative}
-.play-btn{width:50px;height:50px;border-radius:50%;background:var(--ac);border:none;
-  cursor:pointer;display:flex;align-items:center;justify-content:center;
-  transition:all .15s;box-shadow:0 2px 12px rgba(201,100,66,.3)}
-.play-btn:hover{background:var(--ac-hover);box-shadow:0 4px 20px rgba(201,100,66,.4)}
-.play-btn:active{transform:scale(.94)}
-.play-btn svg{width:17px;height:17px;fill:#fff}
-.play-btn.is-pause svg{margin:0}
-.play-btn.is-play svg{margin-left:2px}
-@keyframes pulse-glow{0%,100%{box-shadow:0 2px 12px rgba(201,100,66,.3)}
-  50%{box-shadow:0 2px 24px rgba(201,100,66,.55)}}
-.pulse{animation:pulse-glow 2s infinite}
+.dur-mode-tag{font-size:11px;font-weight:500;padding:2px 8px;border-radius:var(--rp);
+  background:var(--surf2);color:var(--tx3);border:1px solid var(--bd);margin-left:2px}
 
 /* ── Progress pills ── */
 .progress-pills{display:flex;gap:5px;margin-bottom:1.5rem}
-.prog-pill{flex:1;padding:5px 8px;border-radius:var(--rp);font-size:11px;
-  text-align:center;border:1px solid var(--bd);color:var(--tx3);
-  background:var(--surf2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-  transition:all .2s}
-.prog-pill.active{background:var(--ac-dim);border-color:var(--ac-bd);
-  color:var(--ac);font-weight:500}
-.prog-pill.done{background:var(--green-dim);border-color:transparent;
-  color:var(--green);text-decoration:line-through}
-.prog-pill.skip{opacity:.4;text-decoration:line-through}
+.prog-pill{flex:1;padding:5px 8px;border-radius:var(--rp);font-size:11px;text-align:center;
+  border:1px solid var(--bd);color:var(--tx3);background:var(--surf2);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:all .2s}
+.prog-pill.active{background:var(--ac-dim);border-color:var(--ac-bd);color:var(--ac);font-weight:500}
+.prog-pill.done{background:var(--green-dim);border-color:transparent;color:var(--green);text-decoration:line-through}
+.prog-pill.skip{opacity:.35;text-decoration:line-through}
 
-/* ── Reflect ── */
-.prog-btns{display:flex;gap:6px;margin-bottom:1.25rem}
-.prog-btn{flex:1;padding:9px 6px;border:1px solid var(--bd);border-radius:var(--rs);
-  background:var(--surf2);font-family:inherit;font-size:13px;color:var(--tx2);
-  cursor:pointer;transition:all .15s;text-align:center}
-.prog-btn:hover{background:var(--hover)}
-.prog-btn.sel{background:var(--ac-dim);border-color:var(--ac-bd);color:var(--ac);font-weight:500}
-.next-inp{width:100%;padding:10px 12px;background:var(--surf2);border:1px solid var(--bd);
-  border-radius:var(--rs);font-family:inherit;font-size:14px;color:var(--tx);
-  outline:none;transition:all .2s}
-.next-inp::placeholder{color:var(--tx3)}
-.next-inp:focus{border-color:var(--ac-bd);background:var(--surf);
-  box-shadow:0 0 0 3px rgba(201,100,66,.1)}
+/* ── Timer ── */
+.timer-wrap{padding:2rem 1.5rem 1.75rem;text-align:center}
+.focus-task-label{display:inline-flex;align-items:center;gap:6px;background:var(--surf2);
+  border:1px solid var(--bd);border-radius:var(--rp);padding:5px 14px;font-size:13px;
+  color:var(--tx2);margin-bottom:1.75rem;max-width:100%;overflow:hidden}
+.focus-task-label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--tx);font-weight:500}
+.ring-wrap{position:relative;width:180px;height:180px;margin:0 auto 1.75rem}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-bg{fill:none;stroke:var(--surf3);stroke-width:3}
+.ring-fg{fill:none;stroke:var(--ac);stroke-width:3;stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s}
+.ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-time{font-size:38px;font-weight:300;letter-spacing:-.04em;line-height:1}
+.ring-status{font-size:11px;color:var(--tx3);margin-top:5px;letter-spacing:.04em;text-transform:uppercase}
+.timer-actions{display:flex;align-items:center;justify-content:center;gap:12px;position:relative}
+.play-btn{width:52px;height:52px;border-radius:50%;background:var(--ac);border:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+  box-shadow:0 3px 14px var(--ac-shadow)}
+.play-btn:hover{background:var(--ac-hover);box-shadow:0 5px 20px var(--ac-shadow);transform:scale(1.05)}
+.play-btn:active{transform:scale(.95)}
+.play-btn svg{width:18px;height:18px;fill:#fff}
+.play-btn.is-play svg{margin-left:2px}
+@keyframes pulse-glow{0%,100%{box-shadow:0 3px 14px var(--ac-shadow)}50%{box-shadow:0 3px 28px var(--ac-shadow),0 0 0 6px color-mix(in srgb,var(--ac) 10%,transparent)}}
+.pulse{animation:pulse-glow 2s infinite}
+
+/* ── Review: Pillars ── */
+.pillar-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
+.pillar-row{display:flex;align-items:center;gap:10px}
+.pillar-icon{font-size:16px;width:22px;text-align:center;flex-shrink:0}
+.pillar-label{width:78px;font-size:13px;color:var(--tx2);flex-shrink:0}
+.slider-wrap{flex:1}
+.slider{-webkit-appearance:none;appearance:none;width:100%;height:5px;border-radius:3px;
+  outline:none;cursor:pointer;
+  --fp:50%;--fc:var(--amber);
+  background:linear-gradient(to right,var(--fc) 0%,var(--fc) var(--fp),var(--surf3) var(--fp),var(--surf3) 100%);
+  transition:background .1s}
+.slider::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:17px;height:17px;
+  border-radius:50%;background:var(--surf);border:2px solid var(--fc);
+  cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15);transition:border-color .1s,transform .1s}
+.slider:hover::-webkit-slider-thumb{transform:scale(1.15)}
+.slider::-moz-range-thumb{width:15px;height:15px;border-radius:50%;background:var(--surf);
+  border:2px solid var(--fc);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.15)}
+.slider::-webkit-slider-runnable-track{height:5px;border-radius:3px}
+.pillar-val-wrap{width:22px;text-align:center;flex-shrink:0}
+.pillar-val{font-size:13px;font-weight:600;color:var(--tx)}
+.pillars-total{text-align:right;font-size:13px;color:var(--tx2);margin-bottom:1.5rem;margin-top:-4px}
+.pillars-total strong{color:var(--tx);font-weight:600}
+
+/* ── Review: Zone cards ── */
+.zone-cards{display:flex;flex-direction:column;gap:7px;margin-bottom:1.5rem}
+.zone-card{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:var(--rs);
+  border:1.5px solid var(--bd);background:var(--surf2);cursor:pointer;text-align:left;
+  transition:all .18s;position:relative;overflow:hidden}
+.zone-card::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;transition:width .18s}
+.zone-card.z-comfort::before{background:var(--green)}
+.zone-card.z-stretch::before{background:var(--amber)}
+.zone-card.z-panic::before{background:var(--red)}
+.zone-card:hover{background:var(--hover);border-color:var(--bd2)}
+.zone-card.z-comfort.sel{background:var(--green-dim);border-color:var(--green)}
+.zone-card.z-stretch.sel{background:var(--amber-dim);border-color:var(--amber)}
+.zone-card.z-panic.sel{background:var(--red-dim);border-color:var(--red)}
+.zone-icon{font-size:20px;flex-shrink:0;width:28px;text-align:center}
+.zone-body{flex:1}
+.zone-title{font-size:14px;font-weight:600;letter-spacing:-.01em;line-height:1.2;color:var(--tx)}
+.zone-card.z-comfort.sel .zone-title{color:var(--green)}
+.zone-card.z-stretch.sel .zone-title{color:var(--amber)}
+.zone-card.z-panic.sel .zone-title{color:var(--red)}
+.zone-desc{font-size:12px;color:var(--tx3);margin-top:1px}
+.zone-check{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--bd2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .18s}
+.zone-card.z-comfort.sel .zone-check{background:var(--green);border-color:var(--green)}
+.zone-card.z-stretch.sel .zone-check{background:var(--amber);border-color:var(--amber)}
+.zone-card.z-panic.sel .zone-check{background:var(--red);border-color:var(--red)}
+.zone-check svg{width:10px;height:10px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .15s}
+.zone-card.sel .zone-check svg{opacity:1}
+
+/* ── Review: Tomorrow ── */
+.tom-rows{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.tom-row{display:flex;align-items:center;border:1px solid var(--bd);border-radius:var(--rs);
+  background:var(--surf2);transition:all .15s;overflow:hidden}
+.tom-row:focus-within{border-color:var(--ac-bd);background:var(--surf);box-shadow:0 0 0 3px color-mix(in srgb,var(--ac) 12%,transparent)}
+.tom-idx{font-size:11px;font-weight:500;color:var(--tx3);padding:0 10px;flex-shrink:0}
+.tom-inp{flex:1;border:none;background:transparent;font-family:inherit;font-size:14px;color:var(--tx);outline:none;padding:10px 10px 10px 0}
+.tom-inp::placeholder{color:var(--tx3)}
 
 /* ── Summary ── */
-.done-icon{width:52px;height:52px;border-radius:50%;background:var(--green-dim);
-  display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem}
-.done-icon svg{width:24px;height:24px;stroke:var(--green);fill:none;
-  stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
-.summary-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;
-  border-bottom:1px solid var(--bd)}
-.summary-row:last-child{border:none}
-.summary-task{font-size:13px;color:var(--tx2);flex:1;line-height:1.4}
-.summary-status{font-size:12px;font-weight:500;flex-shrink:0}
-.summary-status.done{color:var(--green)}
-.summary-status.skip{color:var(--tx3)}
+@keyframes confettiDrop{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(220px) rotate(450deg);opacity:0}}
+.confetti-piece{position:absolute;top:0;animation:confettiDrop var(--dur,1.4s) ease-out var(--delay,0s) forwards}
+.score-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 1.25rem}
+.score-ring-wrap svg{transform:rotate(-90deg)}
+.score-ring-bg{fill:none;stroke:var(--surf3);stroke-width:8}
+.score-ring-fg{fill:none;stroke:var(--ac);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.3,1),stroke .3s}
+.score-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-big{font-size:30px;font-weight:300;letter-spacing:-.03em;line-height:1}
+.score-max{font-size:12px;color:var(--tx3)}
+.stat-row{display:flex;gap:8px;margin-bottom:1.25rem}
+.stat-box{flex:1;padding:12px;background:var(--surf2);border:1px solid var(--bd);border-radius:var(--rs);text-align:center}
+.stat-val{font-size:20px;font-weight:500;letter-spacing:-.02em;color:var(--tx)}
+.stat-label{font-size:11px;color:var(--tx3);margin-top:2px}
+.chart-wrap{margin:0 0 1.25rem;padding:1rem;background:var(--surf2);border-radius:var(--rs);border:1px solid var(--bd)}
+.chart-svg{width:100%;overflow:visible}
+.chart-area{fill:url(#chartGrad);opacity:.2}
+.chart-line{fill:none;stroke:var(--ac);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;transition:stroke .3s}
+.chart-point{fill:var(--surf);stroke:var(--ac);stroke-width:2.5;transition:stroke .3s}
+.chart-label{font-size:9.5px;fill:var(--tx3);text-anchor:middle}
+.chart-val-text{font-size:10px;fill:var(--tx2);font-weight:600;text-anchor:middle}
+.hist-item{padding:14px 0;border-bottom:1px solid var(--bd)}
+.hist-item:last-child{border:none}
+.hist-date{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
+.hist-score-badge{font-size:12px;font-weight:500;padding:2px 8px;border-radius:var(--rp);background:var(--ac-dim);color:var(--ac)}
+.hist-task{font-size:13px;color:var(--tx2);margin-bottom:3px;display:flex;align-items:flex-start;gap:6px}
+.hist-task::before{content:'·';color:var(--tx3);font-weight:700}
+.hist-zone-tag{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;margin-top:6px}
 
-/* ── Settings panel ── */
-.settings-title{font-size:16px;font-weight:600;letter-spacing:-.02em;margin-bottom:1.5rem;
-  display:flex;align-items:center;justify-content:space-between}
-.settings-row{display:flex;align-items:center;justify-content:space-between;
-  padding:12px 0;border-bottom:1px solid var(--bd)}
+/* ── Settings ── */
+.settings-title{font-size:16px;font-weight:600;letter-spacing:-.02em;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between}
+.settings-section-label{font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--tx3);margin-bottom:10px;margin-top:1.25rem}
+.settings-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--bd)}
 .settings-row:last-of-type{border:none}
 .settings-label{font-size:14px;color:var(--tx)}
 .settings-sub{font-size:12px;color:var(--tx3);margin-top:1px}
-.toggle{width:40px;height:22px;border-radius:11px;background:var(--surf3);
-  border:1px solid var(--bd2);cursor:pointer;position:relative;transition:all .2s;flex-shrink:0}
+.toggle{width:40px;height:22px;border-radius:11px;background:var(--surf3);border:1px solid var(--bd2);cursor:pointer;position:relative;transition:all .2s;flex-shrink:0}
 .toggle.on{background:var(--ac);border-color:var(--ac)}
-.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;
-  background:#fff;top:2px;left:2px;transition:transform .2s;
-  box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.toggle::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:2px;left:2px;transition:transform .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .toggle.on::after{transform:translateX(18px)}
-.kbd{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--tx3)}
-.kbd kbd{background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;
-  padding:2px 6px;font-family:inherit;font-size:11px;color:var(--tx2)}
 
-/* ── Divider ── */
-.hr{height:1px;background:var(--bd);margin:1.25rem 0}
+/* ── Theme picker ── */
+.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+.theme-swatch{
+  position:relative;height:62px;border-radius:10px;border:2px solid transparent;
+  cursor:pointer;overflow:hidden;display:flex;flex-direction:column;
+  align-items:flex-start;justify-content:flex-end;padding:7px 8px;
+  transition:transform .15s,box-shadow .15s;font-family:inherit;
+}
+.theme-swatch:hover{transform:scale(1.04);box-shadow:0 4px 14px rgba(0,0,0,.15)}
+.theme-swatch.active{border-color:rgba(255,255,255,.7);box-shadow:0 0 0 2px rgba(0,0,0,.18),0 4px 14px rgba(0,0,0,.15)}
+.theme-swatch.active::after{content:'✓';position:absolute;top:6px;right:7px;font-size:10px;font-weight:700;color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.3)}
+.sw-accent{position:absolute;top:7px;right:7px;width:12px;height:12px;border-radius:50%;border:1.5px solid rgba(255,255,255,.5)}
+.theme-swatch.active .sw-accent{opacity:0}
+.sw-name{font-size:11px;font-weight:600;position:relative;z-index:1;text-shadow:0 1px 2px rgba(0,0,0,.2);color:#fff;letter-spacing:.01em}
+.sw-emoji{font-size:14px;position:absolute;top:7px;left:8px;line-height:1}
+.theme-swatch.active .sw-emoji{opacity:0}
+
+/* ── Kbd hints ── */
+.kbd-hint{font-size:11px;color:var(--tx3);text-align:center;margin-top:6px;display:flex;align-items:center;justify-content:center;gap:6px}
+.kbd-hint kbd,.settings-row kbd{background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;padding:2px 6px;font-family:inherit;font-size:10.5px;color:var(--tx3)}
+.kbd-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;font-size:13px;color:var(--tx2)}
+.kbd-grid span{display:flex;align-items:center;gap:5px}
 
 /* ── Animations ── */
-@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-.fu{animation:fadeUp .2s ease}
-@keyframes shake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-4px)}40%,80%{transform:translateX(4px)}}
-.shake{animation:shake .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .22s ease}
 </style>
 </head>
 <body>
-<div class="app" id="app">
-  <div style="padding:40px;text-align:center;color:#6A6858;">加载中...</div>
-</div>
+<div class="app" id="app"><div style="padding:60px 20px;text-align:center;color:var(--tx3)">加载中…</div></div>
 <div id="overlay-root"></div>
-
 <script>
-// 整个脚本包裹在极限防护容器中
-(function() {
-  try {
+(function(){
+try{
 
-// ─────────────────────────────────────────────
-//  安全的本地存储与降级机制 (防御 SecurityError)
-// ─────────────────────────────────────────────
-let storageAvailable = false;
-let memoryStore = {};
-
-try {
-  const testKey = '__launchpad_test__';
-  window.localStorage.setItem(testKey, testKey);
-  window.localStorage.removeItem(testKey);
-  storageAvailable = true;
-} catch (e) {
-  storageAvailable = false;
-  console.warn("localStorage is blocked by sandbox environment. Falling back to memory storage.");
-}
-
-const Store = {
-  get: function(key) {
-    if (storageAvailable) {
-      try { return window.localStorage.getItem(key); } catch(e) { return null; }
-    } else {
-      return memoryStore[key] || null;
-    }
-  },
-  set: function(key, val) {
-    if (storageAvailable) {
-      try { window.localStorage.setItem(key, val); } catch(e) {}
-    } else {
-      memoryStore[key] = val;
-    }
-  },
-  del: function(key) {
-    if (storageAvailable) {
-      try { window.localStorage.removeItem(key); } catch(e) {}
-    } else {
-      delete memoryStore[key];
-    }
-  }
+/* ─── Storage ─── */
+let storageOk=false,memStore={};
+try{localStorage.setItem('__t','1');localStorage.removeItem('__t');storageOk=true;}catch(e){}
+const Store={
+  get:function(k){if(storageOk){try{return localStorage.getItem(k);}catch(e){}}return memStore[k]||null;},
+  set:function(k,v){if(storageOk){try{localStorage.setItem(k,v);}catch(e){}}else{memStore[k]=v;}},
+  del:function(k){if(storageOk){try{localStorage.removeItem(k);}catch(e){}}else{delete memStore[k];}}
 };
 
-// ─────────────────────────────────────────────
-//  Constants
-// ─────────────────────────────────────────────
-const C = 2 * Math.PI * 80;
-const KEYS = { SAVE:'launchpad_v3', SET:'launchpad_set', STREAK:'launchpad_streak', HIST:'launchpad_hist' };
-const ENERGY = [{k:'high',i:'🔴',l:'深度'},{k:'med',i:'🟡',l:'常规'},{k:'low',i:'🟢',l:'轻松'}];
-const PROG_OPTS = ['完成了','推进了','暂时跳过'];
+/* ─── Themes ─── */
+// Each entry: CSS var overrides + swatch display meta (bg, ac, name, emoji)
+// bg/ac are used to render the swatch preview in settings (NOT CSS vars, just hex for the card)
+const THEMES = {
+  system:{
+    name:'跟随系统',emoji:'🌓',
+    swBg:'linear-gradient(135deg,#F6F4EF 50%,#131109 50%)',swAc:'transparent',
+    vars:null // null = remove all overrides = rely on media query
+  },
+  sand:{
+    name:'沙丘',emoji:'🌾',
+    swBg:'#F6F4EF',swAc:'#C96442',
+    vars:{'--bg':'#F6F4EF','--surf':'#FFFFFF','--surf2':'#F0EDE6','--surf3':'#E6E3DA','--hover':'#EAE7DF',
+      '--bd':'rgba(0,0,0,.07)','--bd2':'rgba(0,0,0,.12)',
+      '--tx':'#18160D','--tx2':'#68634F','--tx3':'#ABA89B',
+      '--ac':'#C96442','--ac-dim':'#F5E8E2','--ac-bd':'#E5BCA8','--ac-hover':'#B35839','--ac-shadow':'rgba(201,100,66,.28)',
+      '--green':'#277A4A','--green-dim':'#E5F2EA','--amber':'#8A5E05','--amber-dim':'#FDF0D5','--red':'#C03B2B','--red-dim':'#FAEAE8'}
+  },
+  midnight:{
+    name:'深夜',emoji:'🌙',
+    swBg:'#0D1117',swAc:'#58A6FF',
+    vars:{'--bg':'#0D1117','--surf':'#161B22','--surf2':'#1C2333','--surf3':'#243047','--hover':'#222D42',
+      '--bd':'rgba(255,255,255,.08)','--bd2':'rgba(255,255,255,.15)',
+      '--tx':'#E6EDF3','--tx2':'#8B949E','--tx3':'#484F58',
+      '--ac':'#58A6FF','--ac-dim':'#0D1F3C','--ac-bd':'#1A3A6C','--ac-hover':'#79BAFF','--ac-shadow':'rgba(88,166,255,.3)',
+      '--green':'#3FB68A','--green-dim':'#0C2A1E','--amber':'#E3B341','--amber-dim':'#261C05','--red':'#F85149','--red-dim':'#2A0F0E'}
+  },
+  forest:{
+    name:'森林',emoji:'🌿',
+    swBg:'#F0F4EE',swAc:'#3E7E4A',
+    vars:{'--bg':'#F0F4EE','--surf':'#FFFFFF','--surf2':'#E5EDE3','--surf3':'#D5E0D2','--hover':'#DCE8D9',
+      '--bd':'rgba(0,0,0,.07)','--bd2':'rgba(0,0,0,.12)',
+      '--tx':'#182419','--tx2':'#4E6650','--tx3':'#91A892',
+      '--ac':'#3E7E4A','--ac-dim':'#E5F2E7','--ac-bd':'#B2D4B6','--ac-hover':'#2D6038','--ac-shadow':'rgba(62,126,74,.28)',
+      '--green':'#2B7040','--green-dim':'#DDF0E3','--amber':'#8A6000','--amber-dim':'#FFF5D4','--red':'#C03B2B','--red-dim':'#FAEAE8'}
+  },
+  sakura:{
+    name:'樱花',emoji:'🌸',
+    swBg:'#FDF6F9',swAc:'#D45C8A',
+    vars:{'--bg':'#FDF6F9','--surf':'#FFFFFF','--surf2':'#FAF0F5','--surf3':'#F4E2EC','--hover':'#F7EBF1',
+      '--bd':'rgba(0,0,0,.06)','--bd2':'rgba(0,0,0,.11)',
+      '--tx':'#2D1822','--tx2':'#7A5562','--tx3':'#BFAAAF',
+      '--ac':'#D45C8A','--ac-dim':'#FCEDF5','--ac-bd':'#F4BCCE','--ac-hover':'#BF4A79','--ac-shadow':'rgba(212,92,138,.28)',
+      '--green':'#4A8C60','--green-dim':'#E8F4ED','--amber':'#9A6800','--amber-dim':'#FFF3D0','--red':'#C03B2B','--red-dim':'#FAEAE8'}
+  },
+  ocean:{
+    name:'海洋',emoji:'🌊',
+    swBg:'#F0F7FA',swAc:'#1E8BC3',
+    vars:{'--bg':'#F0F7FA','--surf':'#FFFFFF','--surf2':'#E4F1F7','--surf3':'#D0E8F3','--hover':'#DAEef6',
+      '--bd':'rgba(0,0,0,.07)','--bd2':'rgba(0,0,0,.12)',
+      '--tx':'#0E2430','--tx2':'#48697A','--tx3':'#96ADBA',
+      '--ac':'#1E8BC3','--ac-dim':'#E3F3FB','--ac-bd':'#9DD0EC','--ac-hover':'#1270A0','--ac-shadow':'rgba(30,139,195,.28)',
+      '--green':'#2A7A50','--green-dim':'#E5F2EA','--amber':'#8A5E05','--amber-dim':'#FDF0D5','--red':'#C03B2B','--red-dim':'#FAEAE8'}
+  },
+  slate:{
+    name:'石板',emoji:'💜',
+    swBg:'#F3F4F9','swAc':'#5C6BC0',
+    vars:{'--bg':'#F3F4F9','--surf':'#FFFFFF','--surf2':'#EAECF5','--surf3':'#D8DCEE','--hover':'#E2E5F0',
+      '--bd':'rgba(0,0,0,.07)','--bd2':'rgba(0,0,0,.12)',
+      '--tx':'#16192E','--tx2':'#525880','--tx3':'#9FA6C6',
+      '--ac':'#5C6BC0','--ac-dim':'#EDEFFE','--ac-bd':'#C2CAFE','--ac-hover':'#4A58AA','--ac-shadow':'rgba(92,107,192,.28)',
+      '--green':'#2A7A50','--green-dim':'#E5F2EA','--amber':'#8A5E05','--amber-dim':'#FDF0D5','--red':'#C03B2B','--red-dim':'#FAEAE8'}
+  },
+  noir:{
+    name:'墨白',emoji:'⬛',
+    swBg:'#0A0A0A',swAc:'#E8E8E8',
+    vars:{'--bg':'#0A0A0A','--surf':'#141414','--surf2':'#1C1C1C','--surf3':'#252525','--hover':'#2A2A2A',
+      '--bd':'rgba(255,255,255,.08)','--bd2':'rgba(255,255,255,.16)',
+      '--tx':'#F2F2F2','--tx2':'#8A8A8A','--tx3':'#484848',
+      '--ac':'#E0E0E0','--ac-dim':'#222222','--ac-bd':'#3A3A3A','--ac-hover':'#FFFFFF','--ac-shadow':'rgba(230,230,230,.2)',
+      '--green':'#5EC488','--green-dim':'#0F1F18','--amber':'#D4A820','--amber-dim':'#1A1400','--red':'#E05A52','--red-dim':'#200A0A'}
+  },
+};
 
-// ─────────────────────────────────────────────
-//  State
-// ─────────────────────────────────────────────
-let SETTINGS = { taskCount:3, defaultDuration:25, sound:true };
+const THEME_VAR_KEYS = ['--bg','--surf','--surf2','--surf3','--hover','--bd','--bd2','--tx','--tx2','--tx3','--ac','--ac-dim','--ac-bd','--ac-hover','--ac-shadow','--green','--green-dim','--amber','--amber-dim','--red','--red-dim'];
+
+function applyTheme(key){
+  const root = document.documentElement;
+  const theme = THEMES[key];
+  if(!theme || !theme.vars){
+    // System: remove all overrides
+    THEME_VAR_KEYS.forEach(function(v){root.style.removeProperty(v);});
+  } else {
+    Object.keys(theme.vars).forEach(function(v){root.style.setProperty(v, theme.vars[v]);});
+  }
+}
+
+/* ─── Constants ─── */
+const C = 2*Math.PI*82;
+const KEYS = {SAVE:'lp_v5',SET:'lp_set',STREAK:'lp_streak',HIST:'lp_hist_v3'};
+const ENERGY = [{k:'high',i:'🔴',l:'深度'},{k:'med',i:'🟡',l:'常规'},{k:'low',i:'🟢',l:'轻松'}];
+const PILLARS = [
+  {id:'sleep',icon:'😴',l:'睡眠'},{id:'exercise',icon:'💪',l:'运动'},
+  {id:'nutrition',icon:'🥗',l:'饮食'},{id:'connection',icon:'🤝',l:'联结'},{id:'rest',icon:'🧘',l:'休息'},
+];
+const ZONES = [
+  {id:'comfort',icon:'🟢',title:'Comfort Zone',desc:'轻松无压力，表现平稳',cls:'z-comfort'},
+  {id:'stretch',icon:'🟡',title:'Stretch Zone',desc:'需要努力，兴奋且有成长',cls:'z-stretch'},
+  {id:'panic',  icon:'🔴',title:'Panic Zone',  desc:'焦虑担忧，表现不佳',  cls:'z-panic'},
+];
+
+/* ─── State ─── */
+let SETTINGS = {taskCount:3,defaultDuration:25,sound:true,theme:'system'};
+let STREAK = {count:0,lastDate:'',longest:0};
+let HIST = [];
 let S = newState();
-let STREAK = { count:0, lastDate:'', longest:0 };
 let _timer = null;
 let _rolloverTasks = [];
 
-function newState(taskCount) {
-  const n = taskCount || SETTINGS.taskCount || 3;
-  return {
+function newState(){
+  const n=SETTINGS.taskCount||3;
+  return{
     phase:'plan',
-    tasks: Array.from({length:n}, function(){ return {text:'',energy:'med',skipped:false} }),
-    suggested:0, chosen:-1,
-    duration: SETTINGS.defaultDuration || 25,
-    timeLeft:0, totalTime:0,
-    running:false, paused:false,
-    completedSessions:[],
-    focusTask:'', focusEnergy:'med',
-    reflectProgress:'', reflectNext:'',
+    tasks:Array.from({length:n},function(){return{text:'',energy:'med',skipped:false};}),
+    suggested:0,chosen:-1,
+    duration:SETTINGS.defaultDuration||25,
+    timeLeft:0,totalTime:0,running:false,paused:false,
+    completedSessions:[],focusTask:'',focusEnergy:'med',
+    review:{pillars:{sleep:5,exercise:5,nutrition:5,connection:5,rest:5},zone:'stretch',tomorrow:['']}
   };
 }
 
-// ─────────────────────────────────────────────
-//  Persistence
-// ─────────────────────────────────────────────
-function load() {
-  const raw = Store.get(KEYS.SAVE);
-  if (!raw) return;
-  try {
-    const parsed = JSON.parse(raw);
-    const date = parsed.date;
-    const state = parsed.state || {};
-    const today = new Date().toDateString();
-    
-    if (date === today) {
-      S = Object.assign({}, newState(), state, {running: false});
-      S.completedSessions = S.completedSessions || [];
-      S.tasks = S.tasks || [];
+/* ─── Persistence ─── */
+function loadHistory(){const r=Store.get(KEYS.HIST);if(r){try{HIST=JSON.parse(r);}catch(e){}}}
+function saveHistory(rec){
+  const i=HIST.findIndex(function(h){return h.date===rec.date;});
+  if(i>=0)HIST[i]=rec;else HIST.push(rec);
+  Store.set(KEYS.HIST,JSON.stringify(HIST));
+}
+function loadSettings(){
+  const r=Store.get(KEYS.SET);
+  if(r){try{SETTINGS=Object.assign({},SETTINGS,JSON.parse(r));}catch(e){}}
+}
+function saveSettings(){Store.set(KEYS.SET,JSON.stringify(SETTINGS));}
+function loadStreak(){const r=Store.get(KEYS.STREAK);if(r){try{STREAK=Object.assign({},STREAK,JSON.parse(r));}catch(e){}}}
+function saveStreak(){Store.set(KEYS.STREAK,JSON.stringify(STREAK));}
+function recordStreakDay(){
+  const today=new Date().toDateString();
+  if(STREAK.lastDate===today)return;
+  const yesterday=new Date(Date.now()-86400000).toDateString();
+  STREAK.count=STREAK.lastDate===yesterday?STREAK.count+1:1;
+  STREAK.longest=Math.max(STREAK.longest,STREAK.count);
+  STREAK.lastDate=today;saveStreak();
+}
+function load(){
+  loadHistory();
+  const raw=Store.get(KEYS.SAVE);
+  if(!raw)return;
+  try{
+    const parsed=JSON.parse(raw);
+    const today=new Date().toDateString();
+    if(parsed.date===today){
+      S=Object.assign({},newState(),parsed.state,{running:false});
+      S.completedSessions=S.completedSessions||[];
+      S.tasks=S.tasks||[];
+      S.review=S.review||newState().review;
     } else {
-      const tasks = state.tasks || [];
-      const pastSessions = state.completedSessions || [];
-      _rolloverTasks = tasks.filter(function(t) {
-        return t.text && t.text.trim() && !pastSessions.find(function(s){ return s.task === t.text; });
+      const tasks=parsed.state.tasks||[];
+      const past=parsed.state.completedSessions||[];
+      _rolloverTasks=tasks.filter(function(t){
+        return t.text&&t.text.trim()&&!past.find(function(s){return s.task===t.text;});
       });
+      const last=HIST.length>0?HIST[HIST.length-1]:null;
+      if(last&&last.tomorrow&&last.tomorrow.length>0){
+        const toms=last.tomorrow.filter(function(t){return t.trim();});
+        if(toms.length>0){
+          S.tasks=toms.map(function(t){return{text:t,energy:'med',skipped:false};});
+          while(S.tasks.length<SETTINGS.taskCount)S.tasks.push({text:'',energy:'med',skipped:false});
+        }
+      }
     }
-  } catch(e) {
-    console.error('Data parse error', e);
-  }
+  }catch(e){console.error(e);}
+}
+function save(){
+  Store.set(KEYS.SAVE,JSON.stringify({date:new Date().toDateString(),state:Object.assign({},S,{running:false})}));
 }
 
-function save() {
-  Store.set(KEYS.SAVE, JSON.stringify({
-    date: new Date().toDateString(),
-    state: Object.assign({}, S, {running: false})
-  }));
-}
-
-function loadSettings() {
-  const raw = Store.get(KEYS.SET);
-  if (raw) {
-    try { SETTINGS = Object.assign({}, SETTINGS, JSON.parse(raw)); } catch(e){}
-  }
-}
-
-function saveSettings() {
-  Store.set(KEYS.SET, JSON.stringify(SETTINGS));
-}
-
-function loadStreak() {
-  const raw = Store.get(KEYS.STREAK);
-  if (raw) {
-    try { STREAK = Object.assign({}, STREAK, JSON.parse(raw)); } catch(e){}
-  }
-}
-
-function saveStreak() {
-  Store.set(KEYS.STREAK, JSON.stringify(STREAK));
-}
-
-function recordStreakDay() {
-  const today = new Date().toDateString();
-  if (STREAK.lastDate === today) return;
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
-  STREAK.count = STREAK.lastDate === yesterday ? STREAK.count + 1 : 1;
-  STREAK.longest = Math.max(STREAK.longest, STREAK.count);
-  STREAK.lastDate = today;
-  saveStreak();
-}
-
-// ─────────────────────────────────────────────
-//  Audio (防御 AudioContext 初始化错误)
-// ─────────────────────────────────────────────
-function playDone() {
-  if (!SETTINGS.sound) return;
-  try {
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    const ctx = new AudioCtx();
-    [[880,.05],[660,.3],[440,.6]].forEach(function(pair) {
-      const freq = pair[0];
-      const when = pair[1];
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.connect(gain); gain.connect(ctx.destination);
-      osc.type = 'sine';
-      osc.frequency.value = freq;
-      gain.gain.setValueAtTime(0, ctx.currentTime + when);
-      gain.gain.linearRampToValueAtTime(0.25, ctx.currentTime + when + 0.02);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + when + 1.2);
-      osc.start(ctx.currentTime + when);
-      osc.stop(ctx.currentTime + when + 1.2);
+/* ─── Audio ─── */
+function playDone(){
+  if(!SETTINGS.sound)return;
+  try{
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return;
+    const ctx=new Ctx();
+    [[880,.05],[660,.3],[440,.65]].forEach(function(p){
+      const osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.type='sine';osc.frequency.value=p[0];
+      const t=ctx.currentTime+p[1];
+      gain.gain.setValueAtTime(0,t);
+      gain.gain.linearRampToValueAtTime(0.22,t+0.02);
+      gain.gain.exponentialRampToValueAtTime(0.001,t+1.2);
+      osc.start(t);osc.stop(t+1.2);
     });
-  } catch(e) {
-    console.warn("Audio playback disabled by environment.");
-  }
+  }catch(e){}
 }
 
-// ─────────────────────────────────────────────
-//  Helpers
-// ─────────────────────────────────────────────
-function esc(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function fmt(sec) {
-  return String(Math.floor(sec/60)).padStart(2,'0') + ':' + String(sec%60).padStart(2,'0');
-}
-function fmtDate() {
-  return new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});
-}
-function durationMode(d) {
-  return d <= 15 ? '热身' : d <= 30 ? '番茄' : d <= 50 ? '深度' : '马拉松';
-}
-function availableTasks() {
-  return S.tasks.map(function(t,i){ return Object.assign({}, t, {i: i}); }).filter(function(t){
-    return t.text.trim() && !t.skipped && !S.completedSessions.find(function(s){ return s.task === t.text; });
+/* ─── Helpers ─── */
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+function fmtDate(){return new Date().toLocaleDateString('zh-CN',{month:'long',day:'numeric',weekday:'short'});}
+function durMode(d){return d<=15?'热身':d<=30?'番茄':d<=50?'深度':'马拉松';}
+function availableTasks(){
+  return S.tasks.map(function(t,i){return Object.assign({},t,{i:i});}).filter(function(t){
+    return t.text.trim()&&!t.skipped&&!S.completedSessions.find(function(s){return s.task===t.text;});
   });
 }
-function suggestTask() {
-  const hour = new Date().getHours();
-  const order = hour < 13 ? ['high','med','low'] : hour < 17 ? ['med','high','low'] : ['low','med','high'];
-  const avail = availableTasks();
-  for (let i=0; i<order.length; i++) {
-    const e = order[i];
-    const t = avail.find(function(t){ return t.energy === e; });
-    if (t) return t.i;
-  }
-  return avail.length > 0 ? avail[0].i : 0;
+function suggestTask(){
+  const h=new Date().getHours();
+  const order=h<13?['high','med','low']:h<17?['med','high','low']:['low','med','high'];
+  const avail=availableTasks();
+  for(let i=0;i<order.length;i++){const t=avail.find(function(t){return t.energy===order[i];});if(t)return t.i;}
+  return avail.length>0?avail[0].i:0;
 }
-function hasMore() {
-  return availableTasks().length > 0;
+function hasMore(){return availableTasks().length>0;}
+function pillarsTotal(){const p=S.review.pillars;return Object.keys(p).reduce(function(a,k){return a+(p[k]||0);},0);}
+function getGreeting(){
+  const h=new Date().getHours();
+  if(h>=5&&h<11)return{icon:'☀️',title:'早上好',sub:'写下今天最重要的事情。'};
+  if(h>=11&&h<14)return{icon:'🌤',title:'上午好',sub:'趁精力还在，锁定今天的计划。'};
+  if(h>=14&&h<18)return{icon:'⛅',title:'下午好',sub:'下午也是好的开始。'};
+  if(h>=18&&h<22)return{icon:'🌆',title:'傍晚好',sub:'这会儿适合收尾或做轻松任务。'};
+  return{icon:'🌙',title:'晚上好',sub:'为明天的早晨做好准备。'};
+}
+function sliderFillCSS(val){
+  const pct=(val/10*100).toFixed(1)+'%';
+  const col=val<=3?'var(--red)':val<=6?'var(--amber)':'var(--green)';
+  return '--fp:'+pct+';--fc:'+col;
 }
 
-// ─────────────────────────────────────────────
-//  Timer Engine
-// ─────────────────────────────────────────────
-function startTimer() {
-  clearInterval(_timer);
-  S.running = true; S.paused = false;
-  _timer = setInterval(function(){
-    if (!S.running) return;
-    if (S.timeLeft <= 0) {
-      clearInterval(_timer);
-      S.running = false;
-      playDone();
-      finishSession();
-      return;
-    }
+/* ─── Timer ─── */
+function startTimer(){
+  clearInterval(_timer);S.running=true;S.paused=false;
+  _timer=setInterval(function(){
+    if(!S.running)return;
+    if(S.timeLeft<=0){clearInterval(_timer);S.running=false;playDone();finishSession();return;}
     S.timeLeft--;
-    const rt = document.getElementById('ring-time');
-    const rf = document.getElementById('ring-fg');
-    if (rt) rt.textContent = fmt(S.timeLeft);
-    if (rf) rf.style.strokeDashoffset = String(C*(1-S.timeLeft/S.totalTime));
-    const rs = document.getElementById('ring-status');
-    if (rs) rs.textContent = '专注中';
-    if (S.timeLeft % 30 === 0) save();
-  }, 1000);
+    const rt=document.getElementById('ring-time');
+    const rf=document.getElementById('ring-fg');
+    const rs=document.getElementById('ring-status');
+    if(rt)rt.textContent=fmt(S.timeLeft);
+    if(rf)rf.style.strokeDashoffset=String(C*(1-S.timeLeft/S.totalTime));
+    if(rs)rs.textContent='专注中';
+    if(S.timeLeft%30===0)save();
+  },1000);
   render();
 }
-
-function pauseTimer() {
-  clearInterval(_timer);
-  S.running = false; S.paused = true;
-  render();
+function pauseTimer(){clearInterval(_timer);S.running=false;S.paused=true;render();}
+function finishSession(){
+  S.completedSessions.push({task:S.focusTask,duration:S.duration,progress:''});
+  S.suggested=suggestTask();
+  S.phase=hasMore()?'choose':'review';
+  save();render();
+}
+function launchFocus(text,energy){
+  S.focusTask=text;S.focusEnergy=energy||'med';
+  S.timeLeft=S.duration*60;S.totalTime=S.duration*60;
+  S.running=false;S.paused=false;S.phase='focus';save();render();
 }
 
-function finishSession() {
-  S.completedSessions.push({task:S.focusTask, duration:S.duration, progress:''});
-  S.phase = 'reflect';
-  save(); render();
+/* ─── Render helpers ─── */
+function renderHeader(showEdit){
+  const streakEl=STREAK.count>1?'<div class="streak-badge">🔥 '+STREAK.count+' 天</div>':'';
+  const editBtn=showEdit?'<button class="hbtn" id="hdr-edit" title="编辑任务 (E)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>':'';
+  return '<div class="header"><div class="header-left">'
+    +'<div class="logo-mark"><svg viewBox="0 0 14 14"><path d="M7 1C4.24 1 2 3.24 2 6c0 1.6.73 3.02 1.87 3.98L3 13h8l-.87-3.02C11.27 9.02 12 7.6 12 6c0-2.76-2.24-5-5-5z"/></svg></div>'
+    +'<span class="logo-name">Daily Launchpad</span>'
+    +'</div><div class="header-right">'
+    +streakEl
+    +'<button class="hbtn" id="btn-hist" title="历史"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg></button>'
+    +editBtn
+    +'<button class="hbtn" id="hdr-settings" title="设置"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>'
+    +'</div></div>';
+}
+function renderPhase(active){
+  const phases=[{id:'plan',l:'计划'},{id:'focus',l:'专注'},{id:'review',l:'复盘'}];
+  const ai=phases.findIndex(function(p){return p.id===active;});
+  return '<div class="phase-strip">'+phases.map(function(p,i){
+    const cls=i<ai?'done':i===ai?'active':'';
+    return(i>0?'<div class="ph-line"></div>':'')+'<div class="ph-node '+cls+'"><div class="ph-dot"></div>'+p.l+'</div>';
+  }).join('')+'</div>';
+}
+function renderRollover(){
+  if(!_rolloverTasks||!_rolloverTasks.length)return'';
+  const names=_rolloverTasks.slice(0,2).map(function(t){return'"'+esc(t.text)+'"';}).join('、');
+  return'<div class="rollover-banner fu"><div style="font-size:16px;flex-shrink:0;margin-top:1px">📋</div>'
+    +'<div style="flex:1;font-size:13px;color:var(--tx2);line-height:1.5"><strong style="color:var(--tx)">昨天有未完成的任务</strong><br>'+names+'，要加入今天吗？'
+    +'<div style="display:flex;gap:6px;margin-top:8px">'
+    +'<button class="rbtn primary" id="rollover-add">加入今天</button>'
+    +'<button class="rbtn ghost" id="rollover-skip">忽略</button>'
+    +'</div></div></div>';
+}
+function renderProgressPills(){
+  return'<div class="progress-pills">'+S.tasks.filter(function(t){return t.text.trim();}).map(function(t){
+    const done=S.completedSessions.find(function(s){return s.task===t.text;});
+    const active=!done&&!t.skipped&&t.text===S.focusTask;
+    return'<div class="prog-pill '+(done?'done':active?'active':t.skipped?'skip':'')+'" title="'+esc(t.text)+'">'+esc(t.text)+'</div>';
+  }).join('')+'</div>';
+}
+function renderTaskRow(t,i){
+  const e=ENERGY.find(function(x){return x.k===t.energy;})||ENERGY[1];
+  return'<div class="task-row-wrap">'
+    +'<button class="energy-btn" id="ebtn-'+i+'">'+e.i+'</button>'
+    +'<div class="task-field"><span class="task-num">'+(i+1)+'</span>'
+    +'<input class="task-inp" id="tinp-'+i+'" type="text" placeholder="物理动作 '+(i+1)+'…" value="'+esc(t.text)+'" maxlength="80"'+(t.skipped?' disabled':'')+'>'
+    +'</div>'
+    +(S.tasks.length>1?'<button class="del-btn" id="del-'+i+'"><svg viewBox="0 0 12 12" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="10" y2="10"/><line x1="10" y1="2" x2="2" y2="10"/></svg></button>':'')
+    +'</div>';
 }
 
-function launchFocus(taskText, taskEnergy) {
-  S.focusTask = taskText;
-  S.focusEnergy = taskEnergy || 'med';
-  S.timeLeft = S.duration * 60;
-  S.totalTime = S.duration * 60;
-  S.running = false; S.paused = false;
-  S.phase = 'focus';
-  save(); render();
+/* ─── Phase renderers ─── */
+function renderPlan(){
+  const valid=S.tasks.filter(function(t){return t.text.trim();}).length;
+  const g=getGreeting();
+  let sub=g.sub;
+  if(STREAK.count>1)sub='<strong>连续'+STREAK.count+'天</strong>了，继续保持！';
+  return renderHeader(false)+renderPhase('plan')+renderRollover()
+    +'<div class="greeting-card fu"><div class="greeting-icon">'+g.icon+'</div>'
+    +'<div><div class="greeting-title">'+g.title+'</div><div class="greeting-sub">'+sub+'</div></div></div>'
+    +'<div class="card fu"><div class="card-pad">'
+    +'<div class="task-count-row"><span class="task-count-label">任务数量</span>'
+    +'<div class="task-count-ctrl">'
+    +'<button class="count-btn" id="cnt-m" '+(S.tasks.length<=1?'disabled':'')+'>−</button>'
+    +'<span class="count-val">'+S.tasks.length+'</span>'
+    +'<button class="count-btn" id="cnt-p" '+(S.tasks.length>=6?'disabled':'')+'>+</button>'
+    +'</div></div>'
+    +'<p class="subtext">用"打开 / 搜索 / 写下 / 发送"开头，写具体的下一步动作。</p>'
+    +'<div class="task-rows">'+S.tasks.map(renderTaskRow).join('')+'</div>'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +ENERGY.map(function(e){return'<span style="font-size:12px;color:var(--tx3)">'+e.i+' '+e.l+'</span>';}).join('<span style="color:var(--bd2)">·</span>')
+    +'<span style="margin-left:auto;font-size:12px;color:var(--tx3)">点图标切换精力</span>'
+    +'</div></div>'
+    +'<div class="card-foot"><button class="btn-main" id="btn-lock" '+(valid?'':'disabled')+'>锁定任务，开始今天</button></div></div>'
+    +'<div class="kbd-hint"><kbd>Enter</kbd> 锁定</div>';
 }
 
-// ─────────────────────────────────────────────
-//  Render helpers
-// ─────────────────────────────────────────────
-function renderHeader(showEdit, showBack) {
-  const streakEl = STREAK.count > 1
-    ? `<div class="streak-badge">🔥 ${STREAK.count}</div>`
-    : '';
-  const editBtn = showEdit
-    ? `<button class="header-btn" id="hdr-edit" title="编辑任务 (E)">
-        <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-      </button>` : '';
-  const backBtn = showBack
-    ? `<button class="header-btn" id="hdr-back" title="返回 (Esc)">
-        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-      </button>` : '';
-  return `<div class="header">
-    <div class="header-left">
-      <div class="logo-mark"><svg viewBox="0 0 14 14"><path d="M7 1C4.24 1 2 3.24 2 6c0 1.6.73 3.02 1.87 3.98L3 13h8l-.87-3.02C11.27 9.02 12 7.6 12 6c0-2.76-2.24-5-5-5z"/></svg></div>
-      <span class="logo-name">Daily Launchpad</span>
-    </div>
-    <div class="header-right">
-      ${streakEl}
-      <span class="date-badge">${fmtDate()}</span>
-      ${backBtn}${editBtn}
-      <button class="header-btn" id="hdr-settings" title="设置">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-    </div>
-  </div>`;
+function renderChoose(){
+  const avail=availableTasks();
+  let sugg=avail.find(function(t){return t.i===S.suggested;});if(!sugg&&avail.length)sugg=avail[0];
+  const others=avail.filter(function(t){return t!==sugg;});
+  const skipped=S.tasks.filter(function(t){return t.text.trim()&&t.skipped;});
+  const h=new Date().getHours();
+  const hint=h<13?'早上精力最好，推荐先做深度任务':h<17?'下午适合常规执行类任务':'傍晚精力下降，从轻松任务热身';
+  return renderHeader(true)+renderPhase('focus')
+    +(S.completedSessions.length>0?renderProgressPills():'')
+    +'<div class="card fu"><div class="card-pad">'
+    +'<p class="eyebrow">建议从这个开始</p><p class="subtext">'+hint+'</p>'
+    +(sugg?'<button class="sugg-card" id="btn-sugg"><span class="sugg-badge">推荐</span><span class="sugg-text">'+esc(sugg.text)+'</span></button>'
+          :'<p style="color:var(--tx3);text-align:center;padding:1rem 0">所有任务已完成 🎉</p>')
+    +(others.length?'<p style="font-size:12px;color:var(--tx3);margin-bottom:8px">或者选另一个：</p>'
+      +'<div class="other-tasks">'+others.map(function(t){
+        return'<button class="other-btn" id="other-'+t.i+'"><span class="other-btn-num">'+(t.i+1)+'</span><span style="flex:1">'+esc(t.text)+'</span><span class="skip-tag" id="sk-'+t.i+'">跳过</span></button>';
+      }).join('')+'</div>':'')
+    +(skipped.length?'<p style="font-size:12px;color:var(--tx3);margin-top:2px">已跳过：'+skipped.map(function(t){return esc(t.text);}).join('、')+'</p>':'')
+    +'<div class="hr"></div><p class="eyebrow">投入时长</p>'
+    +'<div class="dur-row">'
+    +'<button class="dur-adj" id="dur-m">−</button>'
+    +'<span class="dur-val">'+S.duration+'</span><span class="dur-unit">分钟</span>'
+    +'<button class="dur-adj" id="dur-p">+</button>'
+    +'<span class="dur-mode-tag">'+durMode(S.duration)+'</span>'
+    +'</div></div>'
+    +'<div class="card-foot"><button class="btn-main" id="btn-go" '+(sugg?'':'disabled')+'>开始专注</button></div></div>'
+    +'<div class="kbd-hint"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 选任务 · <kbd>Enter</kbd> 开始</div>';
 }
 
-function renderPhase(active) {
-  const phases = [{id:'plan',l:'计划'},{id:'focus',l:'专注'},{id:'reflect',l:'复盘'}];
-  let activeIdx = -1;
-  for(let i=0; i<phases.length; i++){ if(phases[i].id===active) activeIdx=i; }
-  
-  return `<div class="phase-strip">
-    ${phases.map(function(p,i) {
-      const cls = i < activeIdx ? 'done' : i===activeIdx ? 'active' : '';
-      return `${i>0?'<div class="ph-line"></div>':''}
-        <div class="ph-node ${cls}"><div class="ph-dot"></div>${p.l}</div>`;
-    }).join('')}
-  </div>`;
+function renderFocus(){
+  const off=S.totalTime>0?C*(1-S.timeLeft/S.totalTime):0;
+  return renderHeader(true)+renderPhase('focus')
+    +renderProgressPills()
+    +'<div class="card fu"><div class="timer-wrap">'
+    +'<div class="focus-task-label"><span>'+esc(S.focusTask)+'</span></div>'
+    +'<div class="ring-wrap">'
+    +'<svg width="180" height="180" viewBox="0 0 180 180">'
+    +'<circle class="ring-bg" cx="90" cy="90" r="82"/>'
+    +'<circle class="ring-fg" id="ring-fg" cx="90" cy="90" r="82" stroke-dasharray="'+C+'" stroke-dashoffset="'+off+'"/>'
+    +'</svg>'
+    +'<div class="ring-inner"><div class="ring-time" id="ring-time">'+fmt(S.timeLeft)+'</div>'
+    +'<div class="ring-status" id="ring-status">'+(S.paused?'已暂停':S.running?'专注中':'准备好了')+'</div></div></div>'
+    +'<div class="timer-actions">'
+    +'<button class="btn-ghost" id="btn-end" style="position:absolute;left:0">结束此轮</button>'
+    +'<button class="play-btn '+(S.running?'is-pause':'is-play')+((!S.running&&!S.paused)?' pulse':'')+'" id="btn-play">'
+    +(S.running?'<svg viewBox="0 0 18 18" fill="#fff"><rect x="2" y="2" width="5.5" height="14" rx="1.5"/><rect x="10.5" y="2" width="5.5" height="14" rx="1.5"/></svg>'
+              :'<svg viewBox="0 0 18 18" fill="#fff"><polygon points="3,1.5 17,9 3,16.5"/></svg>')
+    +'</button>'
+    +'<button class="btn-ghost" id="btn-switch" style="position:absolute;right:0">换任务</button>'
+    +'</div></div></div>'
+    +'<div class="kbd-hint"><kbd>Space</kbd> 暂停/继续 · <kbd>E</kbd> 编辑</div>';
 }
 
-function renderRollover() {
-  if (!_rolloverTasks || _rolloverTasks.length === 0) return '';
-  const names = _rolloverTasks.slice(0,2).map(function(t){ return `"${esc(t.text)}"`; }).join('、');
-  const more = _rolloverTasks.length > 2 ? `等 ${_rolloverTasks.length} 个` : '';
-  return `<div class="rollover-banner fu" id="rollover-banner">
-    <div class="rollover-icon">📋</div>
-    <div class="rollover-text">
-      <strong>昨天有未完成的任务</strong><br>
-      ${more||names}，要加入今天吗？
-      <div class="rollover-actions">
-        <button class="rollover-btn primary" id="rollover-add">加入今天</button>
-        <button class="rollover-btn ghost" id="rollover-skip">忽略</button>
-      </div>
-    </div>
-  </div>`;
+function renderReview(){
+  const p=S.review.pillars;
+  const total=pillarsTotal();
+  return renderHeader(false)+renderPhase('review')
+    +'<div class="card fu"><div class="card-pad">'
+    +'<h2 style="font-size:18px;font-weight:600;letter-spacing:-.02em;margin-bottom:4px">日终复盘</h2>'
+    +'<p class="subtext">花两分钟审视今天的状态</p>'
+    +'<p class="eyebrow">5大支柱 &nbsp;<span id="pillars-total" style="font-weight:600;color:var(--tx)">'+total+'/50</span></p>'
+    +'<div class="pillar-rows">'
+    +PILLARS.map(function(item){
+      const val=p[item.id]||5;
+      return'<div class="pillar-row">'
+        +'<span class="pillar-icon">'+item.icon+'</span>'
+        +'<span class="pillar-label">'+item.l+'</span>'
+        +'<div class="slider-wrap"><input type="range" class="slider" id="pil-'+item.id+'" min="0" max="10" value="'+val+'" style="'+sliderFillCSS(val)+'"></div>'
+        +'<div class="pillar-val-wrap"><span class="pillar-val" id="pil-val-'+item.id+'">'+val+'</span></div>'
+        +'</div>';
+    }).join('')+'</div>'
+    +'<p class="eyebrow">今天大部分时间处于哪个区？</p>'
+    +'<div class="zone-cards">'
+    +ZONES.map(function(z){
+      const sel=S.review.zone===z.id?' sel':'';
+      return'<div class="zone-card '+z.cls+sel+'" id="zone-'+z.id+'">'
+        +'<span class="zone-icon">'+z.icon+'</span>'
+        +'<div class="zone-body"><div class="zone-title">'+z.title+'</div><div class="zone-desc">'+z.desc+'</div></div>'
+        +'<div class="zone-check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2"/></svg></div>'
+        +'</div>';
+    }).join('')+'</div>'
+    +'<p class="eyebrow">明天的首要任务 <span style="font-weight:400;text-transform:none;letter-spacing:0;font-size:11px;color:var(--tx3)">(将自动填入明天计划)</span></p>'
+    +'<div class="tom-rows" id="tom-tasks">'
+    +S.review.tomorrow.map(function(t,i){
+      return'<div class="tom-row"><span class="tom-idx">'+(i+1)+'</span>'
+        +'<input class="tom-inp" data-idx="'+i+'" placeholder="动作 '+(i+1)+'…" value="'+esc(t)+'"></div>';
+    }).join('')+'</div>'
+    +'<button class="btn-ghost" id="btn-add-tom" style="padding:6px 0;font-size:13px">+ 添加一行</button>'
+    +'</div><div class="card-foot"><button class="btn-main" id="btn-finish-day">保存并查看总结</button></div></div>';
 }
 
-// ─────────────────────────────────────────────
-//  Phase renderers
-// ─────────────────────────────────────────────
-function renderPlan() {
-  const validCount = S.tasks.filter(function(t){ return t.text.trim(); }).length;
-  const canAdd = S.tasks.length < 6;
-  const canRemove = S.tasks.length > 1;
-  return `
-  ${renderHeader(false, false)}
-  ${renderPhase('plan')}
-  ${renderRollover()}
-  <div class="card fu">
-    <div class="card-pad">
-      <div class="task-count-row">
-        <span class="task-count-label">任务数量</span>
-        <div class="task-count-ctrl">
-          <button class="count-btn" id="count-minus" ${!canRemove?'disabled':''}>−</button>
-          <span class="count-val">${S.tasks.length}</span>
-          <button class="count-btn" id="count-plus" ${!canAdd?'disabled':''}>+</button>
-        </div>
-      </div>
-      <p class="subtext">用"打开 / 搜索 / 写下 / 发送"开头，写具体的下一个动作。</p>
-      <div class="task-rows" id="task-rows">
-        ${S.tasks.map(function(t,i){ return renderTaskRow(t,i); }).join('')}
-      </div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:0">
-        ${ENERGY.map(function(e){ return `<span style="font-size:12px;color:var(--tx3)">${e.i} ${e.l}</span>`; }).join('<span style="color:var(--bd2)">·</span>')}
-        <span style="font-size:12px;color:var(--tx3);margin-left:auto">点击切换精力</span>
-      </div>
-    </div>
-    <div class="card-foot">
-      <button class="btn-main" id="btn-lock" ${!validCount?'disabled':''}>锁定任务，开始今天</button>
-    </div>
-  </div>
-  <p style="font-size:11px;color:var(--tx3);text-align:center;margin-top:6px">
-    <span class="kbd"><kbd>Enter</kbd> 锁定</span>
-  </p>`;
+function renderSummary(){
+  const p=S.review.pillars;
+  const total=pillarsTotal();
+  const sessions=S.completedSessions||[];
+  const totalMin=sessions.reduce(function(a,s){return a+(s.duration||0);},0);
+  const scoreArcLen=2*Math.PI*54;
+  const scoreOffset=scoreArcLen*(1-total/50);
+  // Chart
+  const chartData=HIST.slice(-6).map(function(h){return{d:h.date.substring(4,10),v:h.total||0};});
+  chartData.push({d:'今天',v:total});
+  let chartHTML='<p style="text-align:center;color:var(--tx3);font-size:12px;padding:1.5rem 0">积累几天后显示走势图</p>';
+  if(chartData.length>=2){
+    const W=400,H=90,pX=28,pY=16;
+    const dx=(W-pX*2)/(chartData.length-1);
+    const pts=chartData.map(function(d,i){return{x:pX+i*dx,y:pY+(50-d.v)/50*(H-pY*2),v:d.v,l:d.d};});
+    const aPath='M'+pts[0].x+','+H+' '+pts.map(function(p){return p.x+','+p.y;}).join(' L')+' L'+pts[pts.length-1].x+','+H+' Z';
+    chartHTML='<div class="chart-wrap"><p class="eyebrow" style="margin-bottom:10px">最近状态走势 (满分50)</p>'
+      +'<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'">'
+      +'<defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">'
+      +'<stop offset="0%" stop-color="var(--ac)" stop-opacity=".5"/>'
+      +'<stop offset="100%" stop-color="var(--ac)" stop-opacity="0"/>'
+      +'</linearGradient></defs>'
+      +'<path class="chart-area" d="'+aPath+'"/>'
+      +'<polyline class="chart-line" points="'+pts.map(function(p){return p.x+','+p.y;}).join(' ')+'"/>'
+      +pts.map(function(p){
+        return'<circle class="chart-point" cx="'+p.x+'" cy="'+p.y+'" r="3.5"/>'
+          +'<text class="chart-val-text" x="'+p.x+'" y="'+(p.y-9)+'">'+p.v+'</text>'
+          +'<text class="chart-label" x="'+p.x+'" y="'+(H-1)+'">'+p.l+'</text>';
+      }).join('')+'</svg></div>';
+  }
+  // Confetti
+  const cc=['#C96442','#277A4A','#8A5E05','#5C6BC0','#D45C8A','#1E8BC3'];
+  let conf='';
+  for(let i=0;i<20;i++){
+    const x=(Math.random()*90+5).toFixed(1)+'%';
+    const delay=(Math.random()*0.9).toFixed(2)+'s';
+    const dur=(1.2+Math.random()*0.9).toFixed(2)+'s';
+    const col=cc[Math.floor(Math.random()*cc.length)];
+    const sz=(6+Math.random()*6).toFixed(0)+'px';
+    const br=Math.random()>0.5?'50%':'3px';
+    conf+='<div class="confetti-piece" style="left:'+x+';width:'+sz+';height:'+sz+';background:'+col+';border-radius:'+br+';--dur:'+dur+';--delay:'+delay+'"></div>';
+  }
+  const zoneEmoji=S.review.zone==='comfort'?'😌':S.review.zone==='stretch'?'💪':'😰';
+  const zoneName=S.review.zone==='comfort'?'舒适区':S.review.zone==='stretch'?'成长区':'紧张区';
+  return renderHeader(false)
+    +'<div class="card fu" style="position:relative;overflow:hidden"><div style="padding:2.5rem 1.5rem 1.5rem;text-align:center">'+conf
+    +'<div class="score-ring-wrap">'
+    +'<svg width="140" height="140" viewBox="0 0 140 140">'
+    +'<circle class="score-ring-bg" cx="70" cy="70" r="54"/>'
+    +'<circle class="score-ring-fg" cx="70" cy="70" r="54" stroke-dasharray="'+scoreArcLen+'" stroke-dashoffset="'+scoreOffset+'"/>'
+    +'</svg>'
+    +'<div class="score-ring-inner"><div class="score-big">'+total+'</div><div class="score-max">满分 50</div></div></div>'
+    +'<h2 style="font-size:22px;font-weight:600;letter-spacing:-.03em;margin-bottom:6px">今天完成了！</h2>'
+    +(STREAK.count>1?'<p style="font-size:13px;color:var(--amber);margin-bottom:1rem">🔥 连续打卡 '+STREAK.count+' 天</p>':'<div style="margin-bottom:1rem"></div>')
+    +'<div class="stat-row">'
+    +'<div class="stat-box"><div class="stat-val">'+sessions.length+'</div><div class="stat-label">完成任务</div></div>'
+    +'<div class="stat-box"><div class="stat-val">'+totalMin+'</div><div class="stat-label">分钟专注</div></div>'
+    +'<div class="stat-box"><div class="stat-val">'+zoneEmoji+'</div><div class="stat-label">'+zoneName+'</div></div>'
+    +'</div>'
+    +chartHTML
+    +'</div><div class="card-foot"><button class="btn-main" id="btn-reset">重置，明天见</button></div></div>';
 }
 
-function renderTaskRow(t, i) {
-  let e = ENERGY.find(function(x){ return x.k===t.energy; });
-  if (!e) e = ENERGY[1];
-  const canDel = S.tasks.length > 1;
-  return `<div class="task-row-wrap" id="row-${i}">
-    <button class="energy-btn" id="ebtn-${i}" title="切换精力类型">${e.i}</button>
-    <div class="task-field">
-      <span class="task-num">${i+1}</span>
-      <input class="task-inp" id="tinp-${i}" type="text"
-        placeholder="物理动作 ${i+1}…" value="${esc(t.text)}" maxlength="80"
-        ${t.skipped?'disabled':''}>
-    </div>
-    ${canDel?`<button class="del-btn" id="del-${i}" title="删除">
-      <svg viewBox="0 0 13 13" stroke-width="2" stroke-linecap="round"><line x1="2" y1="2" x2="11" y2="11"/><line x1="11" y1="2" x2="2" y2="11"/></svg>
-    </button>`:''}
-  </div>`;
+/* ─── Settings overlay ─── */
+function renderSettingsOverlay(){
+  const cur=SETTINGS.theme||'system';
+  const themeSwatches=Object.keys(THEMES).map(function(key){
+    const t=THEMES[key];
+    const active=key===cur?' active':'';
+    const isGrad=t.swBg.indexOf('gradient')>=0;
+    const bg=isGrad?t.swBg:'background-color:'+t.swBg;
+    const bgStyle=isGrad?'background:'+t.swBg:'background-color:'+t.swBg;
+    const acDot=t.swAc&&t.swAc!=='transparent'
+      ?'<div class="sw-accent" style="background:'+t.swAc+'"></div>':'';
+    return'<button class="theme-swatch'+active+'" data-theme="'+key+'" style="'+bgStyle+'">'
+      +acDot
+      +'<span class="sw-emoji">'+t.emoji+'</span>'
+      +'<span class="sw-name">'+t.name+'</span>'
+      +'</button>';
+  }).join('');
+
+  return'<div class="overlay" id="set-ov"><div class="overlay-panel">'
+    +'<div class="settings-title">设置<button class="btn-ghost" id="close-set">✕</button></div>'
+    +'<div class="settings-section-label" style="margin-top:0">外观主题</div>'
+    +'<div class="theme-grid">'+themeSwatches+'</div>'
+    +'<div class="settings-section-label">偏好</div>'
+    +'<div class="settings-row"><div><div class="settings-label">默认任务数</div><div class="settings-sub">新一天重置后的初始行数</div></div>'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +'<button class="dur-adj" id="st-tc-m">−</button>'
+    +'<span style="font-size:16px;font-weight:500;min-width:20px;text-align:center" id="st-tc">'+SETTINGS.taskCount+'</span>'
+    +'<button class="dur-adj" id="st-tc-p">+</button>'
+    +'</div></div>'
+    +'<div class="settings-row"><div><div class="settings-label">默认专注时长</div><div class="settings-sub">分钟</div></div>'
+    +'<div style="display:flex;align-items:center;gap:8px">'
+    +'<button class="dur-adj" id="st-dur-m">−</button>'
+    +'<span style="font-size:16px;font-weight:500;min-width:28px;text-align:center" id="st-dur">'+SETTINGS.defaultDuration+'</span>'
+    +'<button class="dur-adj" id="st-dur-p">+</button>'
+    +'</div></div>'
+    +'<div class="settings-row"><div><div class="settings-label">计时结束提示音</div></div>'
+    +'<button class="toggle '+(SETTINGS.sound?'on':'')+'" id="st-sound"></button></div>'
+    +'<div class="settings-section-label">键盘快捷键</div>'
+    +'<div class="kbd-grid" style="padding:4px 0 12px">'
+    +'<span><kbd>Enter</kbd> 确认/锁定</span><span><kbd>Space</kbd> 暂停/继续</span>'
+    +'<span><kbd>Esc</kbd> 返回/编辑</span><span><kbd>1 2 3</kbd> 选任务</span>'
+    +'</div>'
+    +'<button class="btn-ghost" id="st-reset-all" style="color:color-mix(in srgb,var(--ac) 80%,transparent);font-size:13px;width:100%;text-align:left;margin-top:4px">清除所有本地数据</button>'
+    +'</div></div>';
 }
 
-function renderChoose() {
-  const avail = availableTasks();
-  let sugg = avail.find(function(t){ return t.i===S.suggested; });
-  if (!sugg && avail.length > 0) sugg = avail[0];
-  const others = avail.filter(function(t){ return t!==sugg; });
-  const skipped = S.tasks.filter(function(t){ return t.text.trim()&&t.skipped; });
-  const hour = new Date().getHours();
-  const hint = hour<13?'早上精力最好，推荐先做深度任务':hour<17?'下午适合常规执行类任务':'傍晚精力下降，从轻松任务热身';
-
-  return `
-  ${renderHeader(true, false)}
-  ${renderPhase('focus')}
-  ${S.completedSessions.length>0?renderProgressPills():''}
-  <div class="card fu">
-    <div class="card-pad">
-      <p class="eyebrow">建议从这个开始</p>
-      <p class="subtext">${hint}</p>
-      ${sugg?`<button class="sugg-card" id="btn-sugg">
-        <span class="sugg-badge">推荐</span>
-        <span class="sugg-text">${esc(sugg.text)}</span>
-      </button>`:'<p style="color:var(--tx3);font-size:14px;text-align:center;padding:1rem 0">所有任务已完成 🎉</p>'}
-      ${others.length?`
-      <p style="font-size:12px;color:var(--tx3);margin-bottom:8px">或者选另一个：</p>
-      <div class="other-tasks">
-        ${others.map(function(t){ return `
-        <button class="other-btn" id="other-${t.i}">
-          <span class="other-btn-num">${t.i+1}</span>
-          <span style="flex:1">${esc(t.text)}</span>
-          <span class="skip-tag" id="skip-tag-${t.i}" title="跳过这个">跳过</span>
-        </button>`;}).join('')}
-      </div>`:''}
-      ${skipped.length?`<p style="font-size:12px;color:var(--tx3);margin-top:4px">已跳过：${skipped.map(function(t){ return esc(t.text); }).join('、')}</p>`:''}
-
-      <div class="hr"></div>
-      <p class="eyebrow">投入时长</p>
-      <div class="dur-row">
-        <button class="dur-adj" id="dur-m">−</button>
-        <span class="dur-val">${S.duration}</span>
-        <span class="dur-unit">分钟</span>
-        <button class="dur-adj" id="dur-p">+</button>
-        <span class="dur-mode">· ${durationMode(S.duration)}</span>
-      </div>
-    </div>
-    <div class="card-foot">
-      <button class="btn-main" id="btn-go" ${!sugg?'disabled':''}>开始专注</button>
-    </div>
-  </div>
-  <p style="font-size:11px;color:var(--tx3);text-align:center;margin-top:6px">
-    <span class="kbd"><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd> 选任务 &nbsp;·&nbsp; <kbd>Enter</kbd> 开始</span>
-  </p>`;
+function renderHistoryOverlay(){
+  if(!HIST.length){
+    return'<div class="overlay" id="hist-ov"><div class="overlay-panel">'
+      +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">'
+      +'<h3 style="font-size:16px;font-weight:600">历史记录</h3>'
+      +'<button class="btn-ghost" id="close-hist">✕</button></div>'
+      +'<p style="color:var(--tx3);text-align:center;padding:2rem 0">完成今天的复盘后记录会显示在这里</p>'
+      +'</div></div>';
+  }
+  const zoneCol=function(z){return z==='comfort'?'var(--green)':z==='stretch'?'var(--amber)':'var(--red)';};
+  const zoneBg=function(z){return z==='comfort'?'var(--green-dim)':z==='stretch'?'var(--amber-dim)':'var(--red-dim)';};
+  const zoneLabel=function(z){return z==='comfort'?'😌 舒适区':z==='stretch'?'💪 成长区':'😰 紧张区';};
+  const histHTML=HIST.slice().reverse().map(function(h){
+    return'<div class="hist-item">'
+      +'<div class="hist-date"><span>'+esc(h.date)+'</span><span class="hist-score-badge">'+h.total+'/50</span></div>'
+      +(h.sessions||[]).map(function(s){return'<div class="hist-task">'+esc(s.task)+'</div>';}).join('')
+      +(h.zone?'<div class="hist-zone-tag" style="color:'+zoneCol(h.zone)+';background:'+zoneBg(h.zone)+'">'+zoneLabel(h.zone)+'</div>':'')
+      +'</div>';
+  }).join('');
+  return'<div class="overlay" id="hist-ov"><div class="overlay-panel">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.25rem">'
+    +'<h3 style="font-size:16px;font-weight:600">📖 历史记录</h3>'
+    +'<button class="btn-ghost" id="close-hist">✕</button></div>'
+    +'<div style="max-height:62vh;overflow-y:auto;margin-bottom:1rem;padding-right:6px">'+histHTML+'</div>'
+    +'<button class="btn-ghost" id="clear-hist" style="width:100%;color:var(--red);font-size:13px">清空历史记录</button>'
+    +'</div></div>';
 }
 
-function renderProgressPills() {
-  return `<div class="progress-pills">
-    ${S.tasks.filter(function(t){ return t.text.trim(); }).map(function(t){
-      const done = S.completedSessions.find(function(s){ return s.task===t.text; });
-      const active = !done && !t.skipped && t.text===S.focusTask;
-      const skip = t.skipped;
-      return `<div class="prog-pill ${done?'done':active?'active':skip?'skip':''}"
-        title="${esc(t.text)}">${esc(t.text)}</div>`;
-    }).join('')}
-  </div>`;
-}
-
-function renderFocus() {
-  const prog = S.totalTime > 0 ? S.timeLeft / S.totalTime : 1;
-  const off = C * (1 - prog);
-  return `
-  ${renderHeader(true, false)}
-  ${renderPhase('focus')}
-  ${renderProgressPills()}
-  <div class="card fu">
-    <div class="timer-wrap">
-      <div class="focus-task-line">
-        <span class="focus-task-text">${esc(S.focusTask)}</span>
-      </div>
-      <div class="ring-wrap">
-        <svg width="176" height="176" viewBox="0 0 176 176">
-          <circle class="ring-bg" cx="88" cy="88" r="80"/>
-          <circle class="ring-fg" id="ring-fg" cx="88" cy="88" r="80"
-            stroke-dasharray="${C}" stroke-dashoffset="${off}"/>
-        </svg>
-        <div class="ring-inner">
-          <div class="ring-time" id="ring-time">${fmt(S.timeLeft)}</div>
-          <div class="ring-status" id="ring-status">${S.paused?'已暂停':S.running?'专注中':'准备好了'}</div>
-        </div>
-      </div>
-      <div class="timer-actions">
-        <button class="btn-ghost" id="btn-end-session" style="position:absolute;left:0">结束此轮</button>
-        <button class="play-btn ${S.running?'is-pause':'is-play'} ${!S.running&&!S.paused?'pulse':''}" id="btn-play">
-          ${S.running
-            ?`<svg viewBox="0 0 17 17" fill="#fff"><rect x="2" y="2" width="5" height="13" rx="1.5"/><rect x="10" y="2" width="5" height="13" rx="1.5"/></svg>`
-            :`<svg viewBox="0 0 17 17" fill="#fff"><polygon points="3,1 16,8.5 3,16"/></svg>`}
-        </button>
-        <button class="btn-ghost" id="btn-switch-task" style="position:absolute;right:0">换个任务</button>
-      </div>
-    </div>
-  </div>
-  <p style="font-size:11px;color:var(--tx3);text-align:center;margin-top:6px">
-    <span class="kbd"><kbd>Space</kbd> 暂停/继续 &nbsp;·&nbsp; <kbd>E</kbd> 编辑任务</span>
-  </p>`;
-}
-
-function renderReflect() {
-  return `
-  ${renderHeader(false, false)}
-  ${renderPhase('reflect')}
-  <div class="card fu">
-    <div class="card-pad">
-      <p class="eyebrow">这一轮结束了</p>
-      <div style="padding:10px 12px;background:var(--green-dim);border-radius:var(--rs);margin-bottom:1.25rem;font-size:14px;color:var(--green);display:flex;align-items:center;gap:8px">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,7 5,10.5 12.5,3"/></svg>
-        ${esc(S.focusTask)}
-      </div>
-      <p style="font-size:14px;font-weight:500;margin-bottom:.75rem;color:var(--tx)">这个任务……</p>
-      <div class="prog-btns">
-        ${PROG_OPTS.map(function(o){ return `
-        <button class="prog-btn ${S.reflectProgress===o?'sel':''}" id="prog-${o}">${o}</button>`; }).join('')}
-      </div>
-      <p style="font-size:13px;color:var(--tx2);margin-bottom:6px">下一个具体动作是什么？<span style="color:var(--tx3)">（可选）</span></p>
-      <input class="next-inp" id="next-inp" type="text"
-        placeholder="打开 / 搜索 / 写下…" value="${esc(S.reflectNext)}" maxlength="80">
-    </div>
-    <div class="card-foot" style="flex-direction:column;gap:6px">
-      ${hasMore()
-        ?`<button class="btn-main" id="btn-continue">继续下一个任务</button>
-          <button class="btn-ghost" id="btn-stop-today" style="align-self:center">今天先停了</button>`
-        :`<button class="btn-main" id="btn-finish-day">完成今天 🎉</button>`}
-    </div>
-  </div>`;
-}
-
-function renderSummary() {
-  const sessions = S.completedSessions || [];
-  let totalMin = 0;
-  for(let i=0; i<sessions.length; i++) { totalMin += sessions[i].duration; }
-  return `
-  ${renderHeader(false, false)}
-  <div class="card fu">
-    <div class="card-pad" style="text-align:center;padding:2.5rem 1.5rem 1.5rem">
-      <div class="done-icon">
-        <svg viewBox="0 0 24 24"><polyline points="4,12 9,17 20,7"/></svg>
-      </div>
-      <h2 style="font-size:22px;font-weight:600;letter-spacing:-.03em;margin-bottom:6px">今天做完了</h2>
-      <p style="font-size:14px;color:var(--tx2);margin-bottom:.5rem">专注了 ${totalMin} 分钟，完成 ${sessions.length} 轮</p>
-      ${STREAK.count>1?`<p style="font-size:13px;color:var(--amber)">🔥 连续打卡 ${STREAK.count} 天</p>`:''}
-    </div>
-    <div style="padding:0 1.5rem">
-      ${S.tasks.filter(function(t){ return t.text.trim(); }).map(function(t){
-        const done = sessions.find(function(s){ return s.task===t.text; });
-        return `<div class="summary-row">
-          <span class="summary-task">${esc(t.text)}</span>
-          <span class="summary-status ${done?'done':'skip'}">${done?'✓ 完成':'— 跳过'}</span>
-        </div>`;
-      }).join('')}
-    </div>
-    <div class="card-foot" style="margin-top:1.25rem">
-      <button class="btn-main" id="btn-reset">重置，明天见</button>
-    </div>
-  </div>`;
-}
-
-function renderSettingsPanel() {
-  return `<div class="overlay" id="settings-overlay">
-    <div class="overlay-panel">
-      <div class="settings-title">
-        设置
-        <button class="btn-ghost" id="close-settings">✕</button>
-      </div>
-      <div class="settings-row">
-        <div><div class="settings-label">默认任务数</div>
-          <div class="settings-sub">每天重置后的初始数量</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="dur-adj" id="set-tc-m">−</button>
-          <span style="font-size:16px;font-weight:500;min-width:20px;text-align:center" id="set-tc-val">${SETTINGS.taskCount}</span>
-          <button class="dur-adj" id="set-tc-p">+</button>
-        </div>
-      </div>
-      <div class="settings-row">
-        <div><div class="settings-label">默认专注时长</div>
-          <div class="settings-sub">分钟</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <button class="dur-adj" id="set-dur-m">−</button>
-          <span style="font-size:16px;font-weight:500;min-width:28px;text-align:center" id="set-dur-val">${SETTINGS.defaultDuration}</span>
-          <button class="dur-adj" id="set-dur-p">+</button>
-        </div>
-      </div>
-      <div class="settings-row">
-        <div><div class="settings-label">计时结束提示音</div></div>
-        <button class="toggle ${SETTINGS.sound?'on':''}" id="toggle-sound"></button>
-      </div>
-      <div class="settings-row" style="border:none;flex-direction:column;align-items:flex-start;gap:10px">
-        <div class="settings-label">键盘快捷键</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;font-size:13px;color:var(--tx2)">
-          <span><kbd style="background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;padding:1px 6px;font-size:11px">Enter</kbd> 确认/锁定</span>
-          <span><kbd style="background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;padding:1px 6px;font-size:11px">Space</kbd> 暂停/继续</span>
-          <span><kbd style="background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;padding:1px 6px;font-size:11px">Esc</kbd> 返回/编辑</span>
-          <span><kbd style="background:var(--surf2);border:1px solid var(--bd2);border-radius:4px;padding:1px 6px;font-size:11px">1 2 3</kbd> 选任务</span>
-        </div>
-      </div>
-      <div style="margin-top:1.5rem">
-        <button class="btn-ghost" id="btn-reset-all" style="color:rgba(201,100,66,.7);font-size:13px;transition:all 0.2s;width:100%;text-align:left;">清除所有数据</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-// ─────────────────────────────────────────────
-//  Main Render Controller
-// ─────────────────────────────────────────────
-function render() {
-  const app = document.getElementById('app');
-  if (!app) return;
-  
-  if (S.phase==='plan')         app.innerHTML = renderPlan();
-  else if (S.phase==='choose')  app.innerHTML = renderChoose();
-  else if (S.phase==='focus')   app.innerHTML = renderFocus();
-  else if (S.phase==='reflect') app.innerHTML = renderReflect();
-  else if (S.phase==='summary') app.innerHTML = renderSummary();
-  
+/* ─── Main render ─── */
+function render(){
+  const app=document.getElementById('app');
+  if(!app)return;
+  if(S.phase==='plan')        app.innerHTML=renderPlan();
+  else if(S.phase==='choose') app.innerHTML=renderChoose();
+  else if(S.phase==='focus')  app.innerHTML=renderFocus();
+  else if(S.phase==='review') app.innerHTML=renderReview();
+  else if(S.phase==='summary')app.innerHTML=renderSummary();
   bindEvents();
 }
+function showOverlay(html,bindFn){const root=document.getElementById('overlay-root');if(root){root.innerHTML=html;if(bindFn)bindFn();}}
+function hideOverlay(){const root=document.getElementById('overlay-root');if(root)root.innerHTML='';}
 
-function showSettings() {
-  const root = document.getElementById('overlay-root');
-  if (!root) return;
-  root.innerHTML = renderSettingsPanel();
-  bindSettingsEvents();
-}
+/* ─── Event helpers ─── */
+function q(id,fn){const el=document.getElementById(id);if(el)el.addEventListener('click',fn);}
 
-function hideSettings() {
-  const root = document.getElementById('overlay-root');
-  if (root) root.innerHTML = '';
-}
-
-// ─────────────────────────────────────────────
-//  Event bindings
-// ─────────────────────────────────────────────
-function bindEvents() {
-  const hdrSettings = document.getElementById('hdr-settings');
-  if (hdrSettings) hdrSettings.addEventListener('click', showSettings);
-
-  const hdrEdit = document.getElementById('hdr-edit');
-  if (hdrEdit) hdrEdit.addEventListener('click', goEdit);
-
-  const hdrBack = document.getElementById('hdr-back');
-  if (hdrBack) hdrBack.addEventListener('click', function(){
-    S.phase = S.phase==='reflect'?'choose':'plan';
-    render();
-  });
-
-  const rAdd = document.getElementById('rollover-add');
-  if (rAdd) rAdd.addEventListener('click', function(){
+/* ─── Event binding ─── */
+function bindEvents(){
+  q('hdr-settings',function(){showOverlay(renderSettingsOverlay(),bindSettings);});
+  q('hdr-edit',goEdit);
+  q('btn-hist',function(){showOverlay(renderHistoryOverlay(),bindHistory);});
+  q('rollover-add',function(){
     _rolloverTasks.forEach(function(rt){
-      const empty = S.tasks.findIndex(function(t){ return !t.text.trim(); });
-      if (empty>=0) S.tasks[empty] = {text:rt.text, energy:rt.energy||'med', skipped:false};
-      else S.tasks.push({text:rt.text, energy:rt.energy||'med', skipped:false});
+      const empty=S.tasks.findIndex(function(t){return!t.text.trim();});
+      if(empty>=0)S.tasks[empty]={text:rt.text,energy:rt.energy||'med',skipped:false};
+      else S.tasks.push({text:rt.text,energy:rt.energy||'med',skipped:false});
     });
-    _rolloverTasks = [];
-    save(); render();
+    _rolloverTasks=[];save();render();
   });
-  const rSkip = document.getElementById('rollover-skip');
-  if (rSkip) rSkip.addEventListener('click', function(){_rolloverTasks=[]; render();});
-
-  const countMinus = document.getElementById('count-minus');
-  const countPlus = document.getElementById('count-plus');
-  if (countMinus) countMinus.addEventListener('click', function(){
-    if (S.tasks.length > 1) { S.tasks.pop(); render(); }
-  });
-  if (countPlus) countPlus.addEventListener('click', function(){
-    if (S.tasks.length < 6) { S.tasks.push({text:'',energy:'med',skipped:false}); render(); }
-  });
-
-  S.tasks.forEach(function(_, i){
-    const inp = document.getElementById('tinp-' + i);
-    if (inp) inp.addEventListener('input', function(e){
-      S.tasks[i].text = e.target.value;
-      const btn = document.getElementById('btn-lock');
-      if (btn) btn.disabled = !S.tasks.some(function(t){ return t.text.trim(); });
+  q('rollover-skip',function(){_rolloverTasks=[];render();});
+  q('cnt-m',function(){if(S.tasks.length>1){S.tasks.pop();render();}});
+  q('cnt-p',function(){if(S.tasks.length<6){S.tasks.push({text:'',energy:'med',skipped:false});render();}});
+  S.tasks.forEach(function(_,i){
+    const inp=document.getElementById('tinp-'+i);
+    if(inp)inp.addEventListener('input',function(e){
+      S.tasks[i].text=e.target.value;
+      const btn=document.getElementById('btn-lock');
+      if(btn)btn.disabled=!S.tasks.some(function(t){return t.text.trim();});
     });
-    const ebtn = document.getElementById('ebtn-' + i);
-    if (ebtn) ebtn.addEventListener('click', function(){
-      const idx = ENERGY.findIndex(function(e){ return e.k===S.tasks[i].energy; });
-      S.tasks[i].energy = ENERGY[(idx+1)%ENERGY.length].k;
-      ebtn.textContent = ENERGY[(idx+1)%ENERGY.length].i;
+    q('ebtn-'+i,function(){
+      const idx=ENERGY.findIndex(function(e){return e.k===S.tasks[i].energy;});
+      S.tasks[i].energy=ENERGY[(idx+1)%ENERGY.length].k;
+      const btn=document.getElementById('ebtn-'+i);
+      if(btn)btn.textContent=ENERGY[(idx+1)%ENERGY.length].i;
     });
-    const del = document.getElementById('del-' + i);
-    if (del) del.addEventListener('click', function(){
-      if (S.tasks.length > 1) { S.tasks.splice(i,1); render(); }
-    });
+    q('del-'+i,function(){if(S.tasks.length>1){S.tasks.splice(i,1);render();}});
   });
-
-  const btnLock = document.getElementById('btn-lock');
-  if (btnLock) btnLock.addEventListener('click', doLock);
-
-  const btnSugg = document.getElementById('btn-sugg');
-  if (btnSugg) btnSugg.addEventListener('click', function(){
-    const t = S.tasks[S.suggested];
-    if (t) launchFocus(t.text, t.energy);
-  });
-
-  availableTasks().filter(function(t){ return t.i!==S.suggested; }).forEach(function(t){
-    const ob = document.getElementById('other-' + t.i);
-    if (ob) ob.addEventListener('click', function(e){
-      const skipTag = document.getElementById('skip-tag-' + t.i);
-      if (skipTag && (e.target===skipTag||skipTag.contains(e.target))) {
-        S.tasks[t.i].skipped = true;
-        S.suggested = suggestTask();
-        save(); render(); return;
+  q('btn-lock',doLock);
+  q('btn-sugg',function(){const t=S.tasks[S.suggested];if(t)launchFocus(t.text,t.energy);});
+  availableTasks().filter(function(t){return t.i!==S.suggested;}).forEach(function(t){
+    q('other-'+t.i,function(e){
+      const sk=document.getElementById('sk-'+t.i);
+      if(sk&&(e.target===sk||sk.contains(e.target))){
+        S.tasks[t.i].skipped=true;S.suggested=suggestTask();
+        if(!hasMore())S.phase='review';save();render();return;
       }
-      S.chosen = t.i;
-      launchFocus(t.text, t.energy);
+      launchFocus(t.text,t.energy);
+    });
+  });
+  q('dur-m',function(){S.duration=Math.max(5,S.duration-5);render();});
+  q('dur-p',function(){S.duration=Math.min(90,S.duration+5);render();});
+  q('btn-go',function(){const avail=availableTasks();if(avail.length)launchFocus(avail[0].text,avail[0].energy);});
+  q('btn-play',function(){S.running?pauseTimer():startTimer();});
+  q('btn-end',function(){clearInterval(_timer);S.running=false;finishSession();});
+  q('btn-switch',function(){clearInterval(_timer);S.running=false;S.suggested=suggestTask();S.phase='choose';save();render();});
+
+  // Review — update DOM directly, NO render() calls
+  PILLARS.forEach(function(item){
+    const slider=document.getElementById('pil-'+item.id);
+    if(!slider)return;
+    slider.addEventListener('input',function(e){
+      const val=parseInt(e.target.value);
+      S.review.pillars[item.id]=val;
+      const valEl=document.getElementById('pil-val-'+item.id);
+      if(valEl)valEl.textContent=val;
+      e.target.style.cssText=sliderFillCSS(val);
+      const tot=document.getElementById('pillars-total');
+      if(tot)tot.textContent=pillarsTotal()+'/50';
+    });
+  });
+  ZONES.forEach(function(z){
+    q('zone-'+z.id,function(){
+      S.review.zone=z.id;
+      document.querySelectorAll('.zone-card').forEach(function(el){el.classList.remove('sel');});
+      const btn=document.getElementById('zone-'+z.id);
+      if(btn)btn.classList.add('sel');
+      save();
+    });
+  });
+  document.querySelectorAll('.tom-inp').forEach(function(inp){
+    inp.addEventListener('input',function(e){
+      S.review.tomorrow[parseInt(e.target.getAttribute('data-idx'))]=e.target.value;
+    });
+  });
+  q('btn-add-tom',function(){
+    S.review.tomorrow.push('');
+    const container=document.getElementById('tom-tasks');
+    if(!container)return;
+    const idx=S.review.tomorrow.length-1;
+    const div=document.createElement('div');
+    div.className='tom-row';
+    div.innerHTML='<span class="tom-idx">'+(idx+1)+'</span><input class="tom-inp" data-idx="'+idx+'" placeholder="动作 '+(idx+1)+'…" value="">';
+    container.appendChild(div);
+    const inp=div.querySelector('.tom-inp');
+    if(inp){inp.addEventListener('input',function(e){S.review.tomorrow[parseInt(e.target.getAttribute('data-idx'))]=e.target.value;});inp.focus();}
+  });
+  q('btn-finish-day',function(){
+    const total=pillarsTotal();
+    saveHistory({date:new Date().toDateString(),sessions:S.completedSessions,
+      pillars:Object.assign({},S.review.pillars),total:total,zone:S.review.zone,
+      tomorrow:S.review.tomorrow.filter(function(t){return t.trim();})});
+    recordStreakDay();S.phase='summary';save();render();
+  });
+  q('btn-reset',doReset);
+}
+
+function bindSettings(){
+  q('close-set',hideOverlay);
+  q('st-sound',function(){
+    SETTINGS.sound=!SETTINGS.sound;
+    const btn=document.getElementById('st-sound');
+    if(btn)btn.classList.toggle('on',SETTINGS.sound);
+    saveSettings();
+  });
+  const tcEl=document.getElementById('st-tc');
+  q('st-tc-m',function(){SETTINGS.taskCount=Math.max(1,SETTINGS.taskCount-1);if(tcEl)tcEl.textContent=SETTINGS.taskCount;saveSettings();});
+  q('st-tc-p',function(){SETTINGS.taskCount=Math.min(6,SETTINGS.taskCount+1);if(tcEl)tcEl.textContent=SETTINGS.taskCount;saveSettings();});
+  const durEl=document.getElementById('st-dur');
+  q('st-dur-m',function(){SETTINGS.defaultDuration=Math.max(5,SETTINGS.defaultDuration-5);if(durEl)durEl.textContent=SETTINGS.defaultDuration;saveSettings();});
+  q('st-dur-p',function(){SETTINGS.defaultDuration=Math.min(90,SETTINGS.defaultDuration+5);if(durEl)durEl.textContent=SETTINGS.defaultDuration;saveSettings();});
+
+  // Theme swatches — apply without re-opening settings
+  document.querySelectorAll('.theme-swatch').forEach(function(swatch){
+    swatch.addEventListener('click',function(){
+      const key=swatch.getAttribute('data-theme');
+      SETTINGS.theme=key;
+      saveSettings();
+      applyTheme(key);
+      // Update active state in-place
+      document.querySelectorAll('.theme-swatch').forEach(function(s){s.classList.remove('active');});
+      swatch.classList.add('active');
+      // Re-render main app with new theme without closing settings
+      render();
     });
   });
 
-  const durM = document.getElementById('dur-m');
-  const durP = document.getElementById('dur-p');
-  if (durM) durM.addEventListener('click', function(){S.duration=Math.max(5,S.duration-5);render();});
-  if (durP) durP.addEventListener('click', function(){S.duration=Math.min(90,S.duration+5);render();});
+  const setOv=document.getElementById('set-ov');
+  if(setOv)setOv.addEventListener('click',function(e){if(e.target===setOv)hideOverlay();});
 
-  const btnGo = document.getElementById('btn-go');
-  if (btnGo) btnGo.addEventListener('click', function(){
-    const avail = availableTasks();
-    if (avail.length > 0) launchFocus(avail[0].text, avail[0].energy);
-  });
-
-  const btnPlay = document.getElementById('btn-play');
-  if (btnPlay) btnPlay.addEventListener('click', function(){S.running?pauseTimer():startTimer();});
-
-  const btnEndSession = document.getElementById('btn-end-session');
-  if (btnEndSession) btnEndSession.addEventListener('click', function(){
-    clearInterval(_timer); S.running=false;
-    finishSession();
-  });
-
-  const btnSwitch = document.getElementById('btn-switch-task');
-  if (btnSwitch) btnSwitch.addEventListener('click', function(){
-    clearInterval(_timer); S.running=false;
-    S.suggested = suggestTask();
-    S.phase='choose'; save(); render();
-  });
-
-  PROG_OPTS.forEach(function(o){
-    const b = document.getElementById('prog-' + o);
-    if (b) b.addEventListener('click', function(){
-      S.reflectProgress=o;
-      const btns = document.querySelectorAll('.prog-btn');
-      for(let i=0; i<btns.length; i++) btns[i].classList.remove('sel');
-      b.classList.add('sel');
-    });
-  });
-
-  const nextInp = document.getElementById('next-inp');
-  if (nextInp) nextInp.addEventListener('input', function(e){ S.reflectNext=e.target.value; });
-
-  const btnContinue = document.getElementById('btn-continue');
-  if (btnContinue) btnContinue.addEventListener('click', advanceAfterReflect);
-
-  const btnStop = document.getElementById('btn-stop-today');
-  if (btnStop) btnStop.addEventListener('click', function(){S.phase='summary';recordStreakDay();save();render();});
-
-  const btnFinish = document.getElementById('btn-finish-day');
-  if (btnFinish) btnFinish.addEventListener('click', function(){S.phase='summary';recordStreakDay();save();render();});
-
-  const btnReset = document.getElementById('btn-reset');
-  if (btnReset) btnReset.addEventListener('click', doReset);
-}
-
-function bindSettingsEvents() {
-  const closeSettingsBtn = document.getElementById('close-settings');
-  if (closeSettingsBtn) closeSettingsBtn.addEventListener('click', hideSettings);
-  
-  const settingsOverlay = document.getElementById('settings-overlay');
-  if (settingsOverlay) settingsOverlay.addEventListener('click', function(e){
-    if (e.target.id === 'settings-overlay') hideSettings();
-  });
-
-  const setTcM = document.getElementById('set-tc-m');
-  const setTcP = document.getElementById('set-tc-p');
-  const setTcVal = document.getElementById('set-tc-val');
-  if (setTcM) setTcM.addEventListener('click', function(){
-    SETTINGS.taskCount = Math.max(1, SETTINGS.taskCount-1);
-    if(setTcVal) setTcVal.textContent = SETTINGS.taskCount; 
-    saveSettings();
-  });
-  if (setTcP) setTcP.addEventListener('click', function(){
-    SETTINGS.taskCount = Math.min(6, SETTINGS.taskCount+1);
-    if(setTcVal) setTcVal.textContent = SETTINGS.taskCount; 
-    saveSettings();
-  });
-
-  const setDurM = document.getElementById('set-dur-m');
-  const setDurP = document.getElementById('set-dur-p');
-  const setDurVal = document.getElementById('set-dur-val');
-  if (setDurM) setDurM.addEventListener('click', function(){
-    SETTINGS.defaultDuration = Math.max(5, SETTINGS.defaultDuration-5);
-    if(setDurVal) setDurVal.textContent = SETTINGS.defaultDuration; 
-    saveSettings();
-  });
-  if (setDurP) setDurP.addEventListener('click', function(){
-    SETTINGS.defaultDuration = Math.min(90, SETTINGS.defaultDuration+5);
-    if(setDurVal) setDurVal.textContent = SETTINGS.defaultDuration; 
-    saveSettings();
-  });
-
-  const toggleSound = document.getElementById('toggle-sound');
-  if (toggleSound) toggleSound.addEventListener('click', function(){
-    SETTINGS.sound = !SETTINGS.sound;
-    if (SETTINGS.sound) toggleSound.classList.add('on');
-    else toggleSound.classList.remove('on');
-    saveSettings();
-  });
-
-  const btnResetAll = document.getElementById('btn-reset-all');
-  if (btnResetAll) {
-    let confirmState = false;
-    btnResetAll.addEventListener('click', function(){
-      if (!confirmState) {
-        confirmState = true;
-        btnResetAll.textContent = '确定清除吗？再次点击将重置所有数据！';
-        btnResetAll.style.color = 'var(--ac)';
-        btnResetAll.style.fontWeight = 'bold';
-        setTimeout(function(){
-          if(btnResetAll) {
-            confirmState = false;
-            btnResetAll.textContent = '清除所有数据';
-            btnResetAll.style.color = '';
-            btnResetAll.style.fontWeight = '';
-          }
-        }, 4000);
-      } else {
-        Store.del(KEYS.SAVE);
-        Store.del(KEYS.SET);
-        Store.del(KEYS.STREAK);
-        hideSettings();
-        doReset();
-      }
-    });
-  }
-}
-
-// ─────────────────────────────────────────────
-//  Actions Controller
-// ─────────────────────────────────────────────
-function doLock() {
-  S.tasks = S.tasks.map(function(t){ return Object.assign({}, t, {text: t.text.trim()}); });
-  S.suggested = suggestTask();
-  S.chosen = S.suggested;
-  S.phase = 'choose';
-  save(); render();
-}
-
-function goEdit() {
-  clearInterval(_timer);
-  S.running = false; S.paused = false;
-  S.phase = 'plan';
-  render();
-}
-
-function advanceAfterReflect() {
-  if (S.reflectNext && S.reflectNext.trim()) {
-    const empty = S.tasks.findIndex(function(t){ return !t.text.trim(); });
-    if (empty >= 0) S.tasks[empty] = {text:S.reflectNext.trim(), energy:'med', skipped:false};
-    else S.tasks.push({text:S.reflectNext.trim(), energy:'med', skipped:false});
-  }
-  const last = S.completedSessions[S.completedSessions.length-1];
-  if (last) last.progress = S.reflectProgress;
-  S.reflectProgress = ''; S.reflectNext = '';
-  S.suggested = suggestTask();
-  S.phase = 'choose';
-  save(); render();
-}
-
-function doReset() {
-  clearInterval(_timer);
-  _rolloverTasks = [];
-  S = newState();
-  Store.del(KEYS.SAVE);
-  render();
-}
-
-// ─────────────────────────────────────────────
-//  Keyboard Shortcuts Handler
-// ─────────────────────────────────────────────
-document.addEventListener('keydown', function(e){
-  const activeEl = document.activeElement;
-  const tag = activeEl ? activeEl.tagName : null;
-  const isInput = tag === 'INPUT' || tag === 'TEXTAREA';
-
-  if (e.key === 'Escape') {
-    if (document.getElementById('settings-overlay')) { hideSettings(); return; }
-    if (S.phase === 'choose') { S.phase='plan'; render(); return; }
-    if (S.phase === 'focus') { clearInterval(_timer); S.running=false; S.phase='plan'; render(); return; }
-    if (S.phase === 'reflect') { S.phase='choose'; return; }
-  }
-
-  if (isInput) return;
-
-  if (e.key === ' ' || e.code === 'Space') {
-    e.preventDefault();
-    if (S.phase === 'focus') { S.running ? pauseTimer() : startTimer(); }
-  }
-
-  if (e.key === 'Enter') {
-    if (S.phase === 'plan') {
-      const btn = document.getElementById('btn-lock');
-      if (btn && !btn.disabled) { doLock(); }
+  let resetConf=false;
+  q('st-reset-all',function(){
+    const btn=document.getElementById('st-reset-all');
+    if(!resetConf){
+      resetConf=true;
+      if(btn){btn.textContent='确定清除吗？（不可恢复）';btn.style.fontWeight='600';}
+      setTimeout(function(){resetConf=false;if(btn){btn.textContent='清除所有本地数据';btn.style.fontWeight='';}},4000);
+    } else {
+      [KEYS.SAVE,KEYS.SET,KEYS.STREAK,KEYS.HIST].forEach(function(k){Store.del(k);});
+      HIST=[];SETTINGS={taskCount:3,defaultDuration:25,sound:true,theme:'system'};
+      applyTheme('system');hideOverlay();doReset();
     }
-    if (S.phase === 'choose') {
-      const btn = document.getElementById('btn-go');
-      if (btn && !btn.disabled) btn.click();
-    }
-  }
+  });
+}
 
-  if (e.key === 'e' || e.key === 'E') {
-    if (S.phase !== 'plan') goEdit();
-  }
+function bindHistory(){
+  q('close-hist',hideOverlay);
+  const hov=document.getElementById('hist-ov');
+  if(hov)hov.addEventListener('click',function(e){if(e.target===hov)hideOverlay();});
+  let clearConf=false;
+  q('clear-hist',function(){
+    const btn=document.getElementById('clear-hist');
+    if(!clearConf){clearConf=true;if(btn)btn.textContent='确定清空吗？';
+      setTimeout(function(){clearConf=false;if(btn)btn.textContent='清空历史记录';},3000);
+    } else {HIST=[];Store.del(KEYS.HIST);hideOverlay();render();}
+  });
+}
 
-  if (['1','2','3','4','5','6'].indexOf(e.key) !== -1 && S.phase === 'choose') {
-    const avail = availableTasks();
-    const idx = parseInt(e.key)-1;
-    if (avail[idx]) launchFocus(avail[idx].text, avail[idx].energy);
+/* ─── Actions ─── */
+function doLock(){
+  S.tasks=S.tasks.map(function(t){return Object.assign({},t,{text:t.text.trim()});});
+  S.suggested=suggestTask();S.chosen=S.suggested;S.phase='choose';save();render();
+}
+function goEdit(){clearInterval(_timer);S.running=false;S.paused=false;S.phase='plan';render();}
+function doReset(){clearInterval(_timer);_rolloverTasks=[];S=newState();Store.del(KEYS.SAVE);render();}
+
+/* ─── Keyboard ─── */
+document.addEventListener('keydown',function(e){
+  const tag=((document.activeElement||{}).tagName||'');
+  const isInput=tag==='INPUT'||tag==='TEXTAREA';
+  if(e.key==='Escape'){
+    if(document.getElementById('set-ov')||document.getElementById('hist-ov')){hideOverlay();return;}
+    if(S.phase==='choose'){S.phase='plan';render();return;}
+    if(S.phase==='focus'){clearInterval(_timer);S.running=false;S.phase='plan';render();return;}
+  }
+  if(isInput)return;
+  if((e.key===' '||e.code==='Space')&&S.phase==='focus'){e.preventDefault();S.running?pauseTimer():startTimer();}
+  if(e.key==='Enter'){
+    if(S.phase==='plan'){const b=document.getElementById('btn-lock');if(b&&!b.disabled)doLock();}
+    if(S.phase==='choose'){const b=document.getElementById('btn-go');if(b&&!b.disabled)b.click();}
+  }
+  if((e.key==='e'||e.key==='E')&&S.phase!=='plan'&&S.phase!=='review'&&S.phase!=='summary')goEdit();
+  if(['1','2','3','4','5','6'].indexOf(e.key)!==-1&&S.phase==='choose'){
+    const avail=availableTasks();const t=avail[parseInt(e.key)-1];if(t)launchFocus(t.text,t.energy);
   }
 });
 
-// ─────────────────────────────────────────────
-//  Initialization entry point
-// ─────────────────────────────────────────────
-function initApp() {
-  loadSettings();
-  loadStreak();
-  load();
-  render();
-  if (S.phase === 'focus' && S.timeLeft > 0) { 
-    S.paused = true; 
-    render(); 
-  }
+/* ─── Init ─── */
+loadSettings();loadStreak();load();
+applyTheme(SETTINGS.theme||'system');
+render();
+if(S.phase==='focus'&&S.timeLeft>0){S.paused=true;render();}
+
+}catch(err){
+  const el=document.getElementById('app');
+  if(el)el.innerHTML='<div style="padding:24px;margin:20px;background:#fef2f2;border:1px solid #fecaca;border-radius:12px"><strong style="color:#dc2626">Error</strong><br><span style="font-size:13px;color:#991b1b">'+String(err.message)+'</span></div>';
+  console.error('Launchpad Error:',err);
 }
-
-// Start app
-initApp();
-
-
-// ─────────────────────────────────────────────
-// 全局异常捕捉闭包边界
-  } catch (err) {
-    const appEl = document.getElementById('app');
-    if (appEl) {
-      appEl.innerHTML = `
-        <div style="padding: 30px; margin: 20px; background: #FFF0F0; border: 1px solid #FFCDCD; border-radius: 12px; font-family: monospace;">
-          <h3 style="color: #D32F2F; margin-bottom: 10px;">⚡ App Initialization Error</h3>
-          <p style="color: #B71C1C; margin-bottom: 15px; font-size: 14px;">${err.message}</p>
-          <pre style="background: #fff; padding: 10px; overflow-x: auto; font-size: 11px; color: #555;">${err.stack}</pre>
-        </div>
-      `;
-    }
-    console.error("Critical Launchpad Error:", err);
-  }
 })();
 </script>
 </body>
