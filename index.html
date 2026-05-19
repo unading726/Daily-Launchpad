@@ -34,11 +34,35 @@
 body{
   font-family:'DM Sans',-apple-system,sans-serif;
   background:var(--bg);color:var(--tx);
-  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;
+  min-height:100vh;
   padding:2rem 1rem 6rem;font-size:15px;line-height:1.6;
   -webkit-font-smoothing:antialiased;transition:background .3s,color .3s;
 }
-.app{width:100%;max-width:480px;position:relative}
+
+/* ── Responsive Layout ── */
+.layout-wrapper {
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+.app{width:100%;max-width:480px;position:relative;flex-shrink:0;}
+.desktop-sidebar {display:none;} /* Hidden on mobile */
+
+@media (min-width: 900px) {
+  .layout-wrapper {max-width: 860px; justify-content: space-between;}
+  .desktop-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 320px;
+    flex-shrink: 0;
+    margin-top: 3.5rem; /* Align slightly lower to match header */
+  }
+}
 
 /* ── Overlay ── */
 .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:100;
@@ -69,7 +93,6 @@ body{
 .streak-badge{display:flex;align-items:center;gap:4px;padding:4px 10px;
   background:var(--amber-dim);border:1px solid color-mix(in srgb,var(--amber) 20%,transparent);
   border-radius:var(--rp);font-size:12px;font-weight:600;color:var(--amber)}
-.date-badge{font-size:12px;color:var(--tx3)}
 
 /* ── Phase strip ── */
 .phase-strip{display:flex;align-items:center;gap:6px;margin-bottom:1.75rem}
@@ -213,8 +236,6 @@ body{
 .play-btn:active{transform:scale(.95)}
 .play-btn svg{width:18px;height:18px;fill:#fff}
 .play-btn.is-play svg{margin-left:2px}
-@keyframes pulse-glow{0%,100%{box-shadow:0 3px 14px var(--ac-shadow)}50%{box-shadow:0 3px 28px var(--ac-shadow),0 0 0 6px color-mix(in srgb,var(--ac) 10%,transparent)}}
-.pulse{animation:pulse-glow 2s infinite}
 
 /* ── Review: Pillars ── */
 .pillar-rows{display:flex;flex-direction:column;gap:10px;margin-bottom:1.75rem}
@@ -276,9 +297,9 @@ body{
 .tom-inp{flex:1;border:none;background:transparent;font-family:inherit;font-size:14px;color:var(--tx);outline:none;padding:10px 10px 10px 0}
 .tom-inp::placeholder{color:var(--tx3)}
 
-/* ── Summary ── */
-@keyframes confettiDrop{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(220px) rotate(450deg);opacity:0}}
+/* ── Summary & Sidebar Widgets ── */
 .confetti-piece{position:absolute;top:0;animation:confettiDrop var(--dur,1.4s) ease-out var(--delay,0s) forwards}
+@keyframes confettiDrop{0%{transform:translateY(-10px) rotate(0deg);opacity:1}100%{transform:translateY(220px) rotate(450deg);opacity:0}}
 .score-ring-wrap{position:relative;width:140px;height:140px;margin:0 auto 1.25rem}
 .score-ring-wrap svg{transform:rotate(-90deg)}
 .score-ring-bg{fill:none;stroke:var(--surf3);stroke-width:8}
@@ -290,6 +311,23 @@ body{
 .stat-box{flex:1;padding:12px;background:var(--surf2);border:1px solid var(--bd);border-radius:var(--rs);text-align:center}
 .stat-val{font-size:20px;font-weight:500;letter-spacing:-.02em;color:var(--tx)}
 .stat-label{font-size:11px;color:var(--tx3);margin-top:2px}
+
+/* ── Desktop Dashboard Widgets ── */
+.widget {
+  background: var(--surf); border: 1px solid var(--bd); border-radius: var(--r);
+  padding: 1.25rem; box-shadow: 0 1px 3px rgba(0,0,0,.04);
+  transition: background .3s, border-color .3s;
+}
+.widget-title { font-size: 13px; font-weight: 600; color: var(--tx); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.brain-dump-inp {
+  width: 100%; height: 110px; border: 1px solid var(--bd); border-radius: var(--rs);
+  background: var(--surf2); padding: 12px; font-family: inherit; font-size: 13.5px;
+  color: var(--tx); resize: none; outline: none; transition: all .2s; line-height: 1.5;
+}
+.brain-dump-inp::placeholder { color: var(--tx3); }
+.brain-dump-inp:focus { border-color: var(--ac-bd); background: var(--surf); box-shadow: 0 0 0 3px color-mix(in srgb,var(--ac) 15%,transparent); }
+
+/* SVG Chart Logic */
 .chart-wrap{margin:0 0 1.25rem;padding:1rem;background:var(--surf2);border-radius:var(--rs);border:1px solid var(--bd)}
 .chart-svg{width:100%;overflow:visible}
 .chart-area{fill:url(#chartGrad);opacity:.2}
@@ -297,6 +335,7 @@ body{
 .chart-point{fill:var(--surf);stroke:var(--ac);stroke-width:2.5;transition:stroke .3s}
 .chart-label{font-size:9.5px;fill:var(--tx3);text-anchor:middle}
 .chart-val-text{font-size:10px;fill:var(--tx2);font-weight:600;text-anchor:middle}
+
 .hist-item{padding:14px 0;border-bottom:1px solid var(--bd)}
 .hist-item:last-child{border:none}
 .hist-date{font-size:14px;font-weight:600;color:var(--tx);margin-bottom:6px;display:flex;justify-content:space-between;align-items:center}
@@ -318,7 +357,7 @@ body{
 .toggle.on::after{transform:translateX(18px)}
 
 /* ── Theme picker ── */
-.theme-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:4px}
+.theme-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(68px,1fr));gap:8px;margin-bottom:4px}
 .theme-swatch{
   position:relative;height:62px;border-radius:10px;border:2px solid transparent;
   cursor:pointer;overflow:hidden;display:flex;flex-direction:column;
@@ -342,11 +381,20 @@ body{
 
 /* ── Animations ── */
 @keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-.fu{animation:fadeUp .22s ease}
+.fu{animation:fadeUp .22s ease both}
 </style>
 </head>
 <body>
-<div class="app" id="app"><div style="padding:60px 20px;text-align:center;color:var(--tx3)">加载中…</div></div>
+<div class="layout-wrapper">
+  <!-- Main App View -->
+  <div class="app" id="app">
+    <div style="padding:60px 20px;text-align:center;color:var(--tx3)">加载中…</div>
+  </div>
+
+  <!-- Desktop Dashboard Sidebar -->
+  <div class="desktop-sidebar" id="sidebar"></div>
+</div>
+
 <div id="overlay-root"></div>
 <script>
 (function(){
@@ -362,13 +410,66 @@ const Store={
 };
 
 /* ─── Themes ─── */
-// Each entry: CSS var overrides + swatch display meta (bg, ac, name, emoji)
-// bg/ac are used to render the swatch preview in settings (NOT CSS vars, just hex for the card)
 const THEMES = {
   system:{
     name:'跟随系统',emoji:'🌓',
     swBg:'linear-gradient(135deg,#F6F4EF 50%,#131109 50%)',swAc:'transparent',
-    vars:null // null = remove all overrides = rely on media query
+    vars:null 
+  },
+  g_light: {
+    name: '灵动白', emoji: '✨',
+    swBg: '#F4F7FB', swAc: '#1A73E8',
+    vars: {
+      '--bg': '#F8F9FA', '--surf': '#FFFFFF', '--surf2': '#F1F3F4', '--surf3': '#E8EAED', '--hover': '#F4F6F8',
+      '--bd': 'rgba(0,0,0,.08)', '--bd2': 'rgba(0,0,0,.15)',
+      '--tx': '#202124', '--tx2': '#5F6368', '--tx3': '#9AA0A6',
+      '--ac': '#1A73E8', '--ac-dim': '#E8F0FE', '--ac-bd': '#A8C7FA', '--ac-hover': '#1558D6', '--ac-shadow': 'rgba(26,115,232,.25)',
+      '--green': '#188038', '--green-dim': '#CEEAD6', '--amber': '#B06000', '--amber-dim': '#FEF7E0', '--red': '#D93025', '--red-dim': '#FCE8E6'
+    }
+  },
+  g_dark: {
+    name: '深邃黑', emoji: '🌌',
+    swBg: '#131314', swAc: '#8AB4F8',
+    vars: {
+      '--bg': '#131314', '--surf': '#1E1F22', '--surf2': '#282A2D', '--surf3': '#35373B', '--hover': '#2F3135',
+      '--bd': 'rgba(255,255,255,.08)', '--bd2': 'rgba(255,255,255,.16)',
+      '--tx': '#E8EAED', '--tx2': '#9AA0A6', '--tx3': '#5F6368',
+      '--ac': '#8AB4F8', '--ac-dim': '#1A2332', '--ac-bd': '#304770', '--ac-hover': '#AECBFA', '--ac-shadow': 'rgba(138,180,248,.25)',
+      '--green': '#81C995', '--green-dim': '#132F1D', '--amber': '#FDE293', '--amber-dim': '#332701', '--red': '#F28B82', '--red-dim': '#3C1310'
+    }
+  },
+  g_spark: {
+    name: '星火紫', emoji: '🔮',
+    swBg: '#0F0D15', swAc: '#C58AF9',
+    vars: {
+      '--bg': '#0E0D13', '--surf': '#16151C', '--surf2': '#211E2B', '--surf3': '#2D293C', '--hover': '#262332',
+      '--bd': 'rgba(255,255,255,.08)', '--bd2': 'rgba(255,255,255,.16)',
+      '--tx': '#E8E6F0', '--tx2': '#A3A0B3', '--tx3': '#6B687A',
+      '--ac': '#C58AF9', '--ac-dim': '#271A38', '--ac-bd': '#4C3073', '--ac-hover': '#D9AFFF', '--ac-shadow': 'rgba(197,138,249,.25)',
+      '--green': '#81C995', '--green-dim': '#132F1D', '--amber': '#FDE293', '--amber-dim': '#332701', '--red': '#F28B82', '--red-dim': '#3C1310'
+    }
+  },
+  g_dawn: {
+    name: '晨曦粉', emoji: '🌅',
+    swBg: '#FCF7F6', swAc: '#E25287',
+    vars: {
+      '--bg': '#FFF8F7', '--surf': '#FFFFFF', '--surf2': '#FCE8E7', '--surf3': '#F7D5D3', '--hover': '#FAEFEE',
+      '--bd': 'rgba(0,0,0,.08)', '--bd2': 'rgba(0,0,0,.15)',
+      '--tx': '#202124', '--tx2': '#5F6368', '--tx3': '#9AA0A6',
+      '--ac': '#FA9076', '--ac-dim': '#FEEDE9', '--ac-bd': '#FAC9BE', '--ac-hover': '#FF7B5C', '--ac-shadow': 'rgba(250,144,118,.25)',
+      '--green': '#188038', '--green-dim': '#CEEAD6', '--amber': '#B06000', '--amber-dim': '#FEF7E0', '--red': '#D93025', '--red-dim': '#FCE8E6'
+    }
+  },
+  g_nova: {
+    name: '霓虹青', emoji: '☄️',
+    swBg: '#0A1114', swAc: '#24E5C4',
+    vars: {
+      '--bg': '#091214', '--surf': '#121A1E', '--surf2': '#1B2930', '--surf3': '#263842', '--hover': '#21313A',
+      '--bd': 'rgba(255,255,255,.08)', '--bd2': 'rgba(255,255,255,.16)',
+      '--tx': '#E4F1F2', '--tx2': '#92B1B8', '--tx3': '#587982',
+      '--ac': '#24E5C4', '--ac-dim': '#0E3630', '--ac-bd': '#186357', '--ac-hover': '#5CF5D8', '--ac-shadow': 'rgba(36,229,196,.25)',
+      '--green': '#81C995', '--green-dim': '#132F1D', '--amber': '#FDE293', '--amber-dim': '#332701', '--red': '#F28B82', '--red-dim': '#3C1310'
+    }
   },
   sand:{
     name:'沙丘',emoji:'🌾',
@@ -441,7 +542,6 @@ function applyTheme(key){
   const root = document.documentElement;
   const theme = THEMES[key];
   if(!theme || !theme.vars){
-    // System: remove all overrides
     THEME_VAR_KEYS.forEach(function(v){root.style.removeProperty(v);});
   } else {
     Object.keys(theme.vars).forEach(function(v){root.style.setProperty(v, theme.vars[v]);});
@@ -450,7 +550,7 @@ function applyTheme(key){
 
 /* ─── Constants ─── */
 const C = 2*Math.PI*82;
-const KEYS = {SAVE:'lp_v5',SET:'lp_set',STREAK:'lp_streak',HIST:'lp_hist_v3'};
+const KEYS = {SAVE:'lp_v5',SET:'lp_set',STREAK:'lp_streak',HIST:'lp_hist_v3',NOTES:'lp_notes_v1'};
 const ENERGY = [{k:'high',i:'🔴',l:'深度'},{k:'med',i:'🟡',l:'常规'},{k:'low',i:'🟢',l:'轻松'}];
 const PILLARS = [
   {id:'sleep',icon:'😴',l:'睡眠'},{id:'exercise',icon:'💪',l:'运动'},
@@ -590,6 +690,26 @@ function sliderFillCSS(val){
   const col=val<=3?'var(--red)':val<=6?'var(--amber)':'var(--green)';
   return '--fp:'+pct+';--fc:'+col;
 }
+// Shared Chart Generator
+function generateChartHTML(chartData, w=400, h=90) {
+  if(!chartData || chartData.length < 2) return '<p style="text-align:center;color:var(--tx3);font-size:12px;padding:1.5rem 0">积累几天后显示走势图</p>';
+  const pX=28, pY=16;
+  const dx=(w-pX*2)/(chartData.length-1);
+  const pts=chartData.map(function(d,i){return{x:pX+i*dx,y:pY+(50-d.v)/50*(h-pY*2),v:d.v,l:d.d};});
+  const aPath='M'+pts[0].x+','+h+' '+pts.map(function(p){return p.x+','+p.y;}).join(' L')+' L'+pts[pts.length-1].x+','+h+' Z';
+  return '<svg class="chart-svg" viewBox="0 0 '+w+' '+h+'">'
+    +'<defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">'
+    +'<stop offset="0%" stop-color="var(--ac)" stop-opacity=".5"/>'
+    +'<stop offset="100%" stop-color="var(--ac)" stop-opacity="0"/>'
+    +'</linearGradient></defs>'
+    +'<path class="chart-area" d="'+aPath+'"/>'
+    +'<polyline class="chart-line" points="'+pts.map(function(p){return p.x+','+p.y;}).join(' ')+'"/>'
+    +pts.map(function(p){
+      return'<circle class="chart-point" cx="'+p.x+'" cy="'+p.y+'" r="3.5"/>'
+        +'<text class="chart-val-text" x="'+p.x+'" y="'+(p.y-9)+'">'+p.v+'</text>'
+        +'<text class="chart-label" x="'+p.x+'" y="'+(h-1)+'">'+p.l+'</text>';
+    }).join('')+'</svg>';
+}
 
 /* ─── Timer ─── */
 function startTimer(){
@@ -606,9 +726,9 @@ function startTimer(){
     if(rs)rs.textContent='专注中';
     if(S.timeLeft%30===0)save();
   },1000);
-  render();
+  renderAppContent();
 }
-function pauseTimer(){clearInterval(_timer);S.running=false;S.paused=true;render();}
+function pauseTimer(){clearInterval(_timer);S.running=false;S.paused=true;renderAppContent();}
 function finishSession(){
   S.completedSessions.push({task:S.focusTask,duration:S.duration,progress:''});
   S.suggested=suggestTask();
@@ -621,7 +741,7 @@ function launchFocus(text,energy){
   S.running=false;S.paused=false;S.phase='focus';save();render();
 }
 
-/* ─── Render helpers ─── */
+/* ─── Main View Renderers ─── */
 function renderHeader(showEdit){
   const streakEl=STREAK.count>1?'<div class="streak-badge">🔥 '+STREAK.count+' 天</div>':'';
   const editBtn=showEdit?'<button class="hbtn" id="hdr-edit" title="编辑任务 (E)"><svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>':'';
@@ -671,7 +791,6 @@ function renderTaskRow(t,i){
     +'</div>';
 }
 
-/* ─── Phase renderers ─── */
 function renderPlan(){
   const valid=S.tasks.filter(function(t){return t.text.trim();}).length;
   const g=getGreeting();
@@ -795,29 +914,12 @@ function renderSummary(){
   const totalMin=sessions.reduce(function(a,s){return a+(s.duration||0);},0);
   const scoreArcLen=2*Math.PI*54;
   const scoreOffset=scoreArcLen*(1-total/50);
-  // Chart
+  
+  // Mobile Chart (rendered inside summary on small screens)
   const chartData=HIST.slice(-6).map(function(h){return{d:h.date.substring(4,10),v:h.total||0};});
   chartData.push({d:'今天',v:total});
-  let chartHTML='<p style="text-align:center;color:var(--tx3);font-size:12px;padding:1.5rem 0">积累几天后显示走势图</p>';
-  if(chartData.length>=2){
-    const W=400,H=90,pX=28,pY=16;
-    const dx=(W-pX*2)/(chartData.length-1);
-    const pts=chartData.map(function(d,i){return{x:pX+i*dx,y:pY+(50-d.v)/50*(H-pY*2),v:d.v,l:d.d};});
-    const aPath='M'+pts[0].x+','+H+' '+pts.map(function(p){return p.x+','+p.y;}).join(' L')+' L'+pts[pts.length-1].x+','+H+' Z';
-    chartHTML='<div class="chart-wrap"><p class="eyebrow" style="margin-bottom:10px">最近状态走势 (满分50)</p>'
-      +'<svg class="chart-svg" viewBox="0 0 '+W+' '+H+'">'
-      +'<defs><linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">'
-      +'<stop offset="0%" stop-color="var(--ac)" stop-opacity=".5"/>'
-      +'<stop offset="100%" stop-color="var(--ac)" stop-opacity="0"/>'
-      +'</linearGradient></defs>'
-      +'<path class="chart-area" d="'+aPath+'"/>'
-      +'<polyline class="chart-line" points="'+pts.map(function(p){return p.x+','+p.y;}).join(' ')+'"/>'
-      +pts.map(function(p){
-        return'<circle class="chart-point" cx="'+p.x+'" cy="'+p.y+'" r="3.5"/>'
-          +'<text class="chart-val-text" x="'+p.x+'" y="'+(p.y-9)+'">'+p.v+'</text>'
-          +'<text class="chart-label" x="'+p.x+'" y="'+(H-1)+'">'+p.l+'</text>';
-      }).join('')+'</svg></div>';
-  }
+  let chartHTML = '<div class="chart-wrap" style="display:block;@media(min-width:900px){display:none;}"><p class="eyebrow" style="margin-bottom:10px">最近状态走势 (满分50)</p>' + generateChartHTML(chartData) + '</div>';
+
   // Confetti
   const cc=['#C96442','#277A4A','#8A5E05','#5C6BC0','#D45C8A','#1E8BC3'];
   let conf='';
@@ -832,6 +934,8 @@ function renderSummary(){
   }
   const zoneEmoji=S.review.zone==='comfort'?'😌':S.review.zone==='stretch'?'💪':'😰';
   const zoneName=S.review.zone==='comfort'?'舒适区':S.review.zone==='stretch'?'成长区':'紧张区';
+  
+  // The summary view
   return renderHeader(false)
     +'<div class="card fu" style="position:relative;overflow:hidden"><div style="padding:2.5rem 1.5rem 1.5rem;text-align:center">'+conf
     +'<div class="score-ring-wrap">'
@@ -847,26 +951,83 @@ function renderSummary(){
     +'<div class="stat-box"><div class="stat-val">'+totalMin+'</div><div class="stat-label">分钟专注</div></div>'
     +'<div class="stat-box"><div class="stat-val">'+zoneEmoji+'</div><div class="stat-label">'+zoneName+'</div></div>'
     +'</div>'
+    +'<div style="display:block;margin-top:1rem;" id="mobile-summary-chart">' // hide on desktop via CSS class would be better, but we do it simple here
     +chartHTML
+    +'</div>'
     +'</div><div class="card-foot"><button class="btn-main" id="btn-reset">重置，明天见</button></div></div>';
 }
 
-/* ─── Settings overlay ─── */
+/* ─── Desktop Sidebar Renderer ─── */
+function renderSidebar(){
+  const sidebar = document.getElementById('sidebar');
+  if (!sidebar) return;
+  
+  const notes = Store.get(KEYS.NOTES) || '';
+  
+  // Calculate lifetime totals
+  const totalMin = HIST.reduce(function(a,h){return a+((h.sessions||[]).reduce(function(sa,s){return sa+(s.duration||0);},0));},0) 
+                 + S.completedSessions.reduce(function(a,s){return a+(s.duration||0);},0);
+  
+  // Recent trend chart for Sidebar
+  let chartData = HIST.slice(-6).map(function(h){ return {d: h.date.substring(4,10), v: h.total||0}; });
+  if (S.phase === 'summary' || S.phase === 'review') {
+      chartData.push({ d: '今天', v: pillarsTotal() });
+  } else if (HIST.length === 0) {
+      chartData = []; // Don't show chart if no history
+  }
+
+  sidebar.innerHTML = `
+    <!-- Brain Dump Widget -->
+    <div class="widget fu" style="animation-delay: 0.05s;">
+      <div class="widget-title">💡 闪念笔记 (Brain Dump)</div>
+      <p style="font-size:12px; color:var(--tx3); margin-bottom:12px; line-height:1.5;">
+        专注时突然想到的杂事写在这里，清空大脑，继续专注。
+      </p>
+      <textarea class="brain-dump-inp" id="brain-dump-inp" placeholder="例如：记得回复邮件、去超市买牛奶...">${esc(notes)}</textarea>
+    </div>
+
+    <!-- Chart Widget -->
+    <div class="widget fu" style="animation-delay: 0.15s; padding:1.25rem 1rem;">
+      <div class="widget-title" style="padding-left:0.25rem;">📊 状态趋势</div>
+      ${generateChartHTML(chartData, 280, 80)}
+    </div>
+
+    <!-- Milestones Widget -->
+    <div class="widget fu" style="animation-delay: 0.25s;">
+      <div class="widget-title">🏆 里程碑</div>
+      <div style="display:flex; gap:10px;">
+        <div style="flex:1; background:var(--surf2); padding:12px 10px; border-radius:var(--rs); text-align:center;">
+          <div style="font-size:20px; font-weight:600; color:var(--tx);">${STREAK.count}</div>
+          <div style="font-size:11px; color:var(--tx3); margin-top:2px;">当前连续 (天)</div>
+        </div>
+        <div style="flex:1; background:var(--surf2); padding:12px 10px; border-radius:var(--rs); text-align:center;">
+          <div style="font-size:20px; font-weight:600; color:var(--tx);">${totalMin}</div>
+          <div style="font-size:11px; color:var(--tx3); margin-top:2px;">累计专注 (分钟)</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  // Bind Brain Dump autosave
+  const bd = document.getElementById('brain-dump-inp');
+  if(bd) {
+    bd.addEventListener('input', function(e) {
+      Store.set(KEYS.NOTES, e.target.value);
+    });
+  }
+}
+
+/* ─── Settings & History Overlays ─── */
 function renderSettingsOverlay(){
   const cur=SETTINGS.theme||'system';
   const themeSwatches=Object.keys(THEMES).map(function(key){
     const t=THEMES[key];
     const active=key===cur?' active':'';
     const isGrad=t.swBg.indexOf('gradient')>=0;
-    const bg=isGrad?t.swBg:'background-color:'+t.swBg;
     const bgStyle=isGrad?'background:'+t.swBg:'background-color:'+t.swBg;
-    const acDot=t.swAc&&t.swAc!=='transparent'
-      ?'<div class="sw-accent" style="background:'+t.swAc+'"></div>':'';
+    const acDot=t.swAc&&t.swAc!=='transparent'?'<div class="sw-accent" style="background:'+t.swAc+'"></div>':'';
     return'<button class="theme-swatch'+active+'" data-theme="'+key+'" style="'+bgStyle+'">'
-      +acDot
-      +'<span class="sw-emoji">'+t.emoji+'</span>'
-      +'<span class="sw-name">'+t.name+'</span>'
-      +'</button>';
+      +acDot+'<span class="sw-emoji">'+t.emoji+'</span><span class="sw-name">'+t.name+'</span></button>';
   }).join('');
 
   return'<div class="overlay" id="set-ov"><div class="overlay-panel">'
@@ -925,8 +1086,8 @@ function renderHistoryOverlay(){
     +'</div></div>';
 }
 
-/* ─── Main render ─── */
-function render(){
+/* ─── Render Orchestrator ─── */
+function renderAppContent() {
   const app=document.getElementById('app');
   if(!app)return;
   if(S.phase==='plan')        app.innerHTML=renderPlan();
@@ -936,6 +1097,12 @@ function render(){
   else if(S.phase==='summary')app.innerHTML=renderSummary();
   bindEvents();
 }
+
+function render(){
+  renderAppContent();
+  renderSidebar(); // Update the sidebar whenever main view updates
+}
+
 function showOverlay(html,bindFn){const root=document.getElementById('overlay-root');if(root){root.innerHTML=html;if(bindFn)bindFn();}}
 function hideOverlay(){const root=document.getElementById('overlay-root');if(root)root.innerHTML='';}
 
@@ -947,6 +1114,7 @@ function bindEvents(){
   q('hdr-settings',function(){showOverlay(renderSettingsOverlay(),bindSettings);});
   q('hdr-edit',goEdit);
   q('btn-hist',function(){showOverlay(renderHistoryOverlay(),bindHistory);});
+  
   q('rollover-add',function(){
     _rolloverTasks.forEach(function(rt){
       const empty=S.tasks.findIndex(function(t){return!t.text.trim();});
@@ -956,8 +1124,10 @@ function bindEvents(){
     _rolloverTasks=[];save();render();
   });
   q('rollover-skip',function(){_rolloverTasks=[];render();});
+  
   q('cnt-m',function(){if(S.tasks.length>1){S.tasks.pop();render();}});
   q('cnt-p',function(){if(S.tasks.length<6){S.tasks.push({text:'',energy:'med',skipped:false});render();}});
+  
   S.tasks.forEach(function(_,i){
     const inp=document.getElementById('tinp-'+i);
     if(inp)inp.addEventListener('input',function(e){
@@ -973,8 +1143,10 @@ function bindEvents(){
     });
     q('del-'+i,function(){if(S.tasks.length>1){S.tasks.splice(i,1);render();}});
   });
+  
   q('btn-lock',doLock);
   q('btn-sugg',function(){const t=S.tasks[S.suggested];if(t)launchFocus(t.text,t.energy);});
+  
   availableTasks().filter(function(t){return t.i!==S.suggested;}).forEach(function(t){
     q('other-'+t.i,function(e){
       const sk=document.getElementById('sk-'+t.i);
@@ -985,6 +1157,7 @@ function bindEvents(){
       launchFocus(t.text,t.energy);
     });
   });
+  
   q('dur-m',function(){S.duration=Math.max(5,S.duration-5);render();});
   q('dur-p',function(){S.duration=Math.min(90,S.duration+5);render();});
   q('btn-go',function(){const avail=availableTasks();if(avail.length)launchFocus(avail[0].text,avail[0].energy);});
@@ -992,7 +1165,7 @@ function bindEvents(){
   q('btn-end',function(){clearInterval(_timer);S.running=false;finishSession();});
   q('btn-switch',function(){clearInterval(_timer);S.running=false;S.suggested=suggestTask();S.phase='choose';save();render();});
 
-  // Review — update DOM directly, NO render() calls
+  // Review Events
   PILLARS.forEach(function(item){
     const slider=document.getElementById('pil-'+item.id);
     if(!slider)return;
@@ -1032,6 +1205,7 @@ function bindEvents(){
     const inp=div.querySelector('.tom-inp');
     if(inp){inp.addEventListener('input',function(e){S.review.tomorrow[parseInt(e.target.getAttribute('data-idx'))]=e.target.value;});inp.focus();}
   });
+  
   q('btn-finish-day',function(){
     const total=pillarsTotal();
     saveHistory({date:new Date().toDateString(),sessions:S.completedSessions,
@@ -1057,18 +1231,12 @@ function bindSettings(){
   q('st-dur-m',function(){SETTINGS.defaultDuration=Math.max(5,SETTINGS.defaultDuration-5);if(durEl)durEl.textContent=SETTINGS.defaultDuration;saveSettings();});
   q('st-dur-p',function(){SETTINGS.defaultDuration=Math.min(90,SETTINGS.defaultDuration+5);if(durEl)durEl.textContent=SETTINGS.defaultDuration;saveSettings();});
 
-  // Theme swatches — apply without re-opening settings
   document.querySelectorAll('.theme-swatch').forEach(function(swatch){
     swatch.addEventListener('click',function(){
       const key=swatch.getAttribute('data-theme');
-      SETTINGS.theme=key;
-      saveSettings();
-      applyTheme(key);
-      // Update active state in-place
+      SETTINGS.theme=key; saveSettings(); applyTheme(key);
       document.querySelectorAll('.theme-swatch').forEach(function(s){s.classList.remove('active');});
-      swatch.classList.add('active');
-      // Re-render main app with new theme without closing settings
-      render();
+      swatch.classList.add('active'); render();
     });
   });
 
@@ -1083,7 +1251,7 @@ function bindSettings(){
       if(btn){btn.textContent='确定清除吗？（不可恢复）';btn.style.fontWeight='600';}
       setTimeout(function(){resetConf=false;if(btn){btn.textContent='清除所有本地数据';btn.style.fontWeight='';}},4000);
     } else {
-      [KEYS.SAVE,KEYS.SET,KEYS.STREAK,KEYS.HIST].forEach(function(k){Store.del(k);});
+      [KEYS.SAVE,KEYS.SET,KEYS.STREAK,KEYS.HIST,KEYS.NOTES].forEach(function(k){Store.del(k);});
       HIST=[];SETTINGS={taskCount:3,defaultDuration:25,sound:true,theme:'system'};
       applyTheme('system');hideOverlay();doReset();
     }
@@ -1136,7 +1304,7 @@ document.addEventListener('keydown',function(e){
 loadSettings();loadStreak();load();
 applyTheme(SETTINGS.theme||'system');
 render();
-if(S.phase==='focus'&&S.timeLeft>0){S.paused=true;render();}
+if(S.phase==='focus'&&S.timeLeft>0){S.paused=true;renderAppContent();}
 
 }catch(err){
   const el=document.getElementById('app');
